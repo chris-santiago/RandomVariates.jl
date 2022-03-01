@@ -1,27 +1,27 @@
 module RandomVariates
 
-export uniform_rng, expon_rng, erlang_rng, bernoulli_rng, binomial_rng, poisson_rng
+export SEED, A, MOD, uniform_rng, expon_rng, erlang_rng, bernoulli_rng, binomial_rng, poisson_rng, normal_rng
 
 using Dates
 
-ENV["JULIA_SEED"] = Dates.value(Dates.now())  # Use current epoch time as default seed
+SEED = Dates.value(Dates.now())  # Use current epoch time as default seed
 
-A = 16807
-MOD = 2^31 - 1
+const A = 16807
+const MOD = 2^31 - 1
 
 
 function set_seed(seed::Int)
-    ENV["JULIA_SEED"] = seed
+    global SEED = seed
 end
 
 
 function set_user_seed(seed::Int)
-    ENV["JULIA_SEED"] = seed * 7856209
+    global SEED = seed * 7856209
 end
 
 
 function get_seed()
-	return parse(Int, ENV["JULIA_SEED"])
+	return SEED
 end
 
 
@@ -37,7 +37,7 @@ function get_std_uniform(size, seed=nothing)
     if !isnothing(seed)
         set_user_seed(seed)
     end
-    U = [gen_prn() for i in 1:n]
+    U = [gen_prn() for i in 1:size]
     U = U./MOD
 	return U
 end

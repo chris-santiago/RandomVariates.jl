@@ -3,6 +3,10 @@ using Statistics
 using Distributions
 
 
+x = RandomVariates.normal_rng(0,1,10000)
+Statistics.mean(x)
+Statistics.std(x)
+
 u = RandomVariates.binomial_rng(.2342, 1000, 1000)
 sum(u)/1000
 
