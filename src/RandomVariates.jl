@@ -1,6 +1,6 @@
 module RandomVariates
 
-export uniform_rng
+export uniform_rng, expon_rng, erlang_rng, bernoulli_rng, binomial_rng
 
 using Dates
 
@@ -36,24 +36,24 @@ function get_uniform(n, seed=nothing)
 end
 
 
-function uniform_rng(a, b, n=1, seed=nothing)
-    U = get_uniform(n, seed)
+function uniform_rng(a, b, size=1, seed=nothing)
+    U = get_uniform(size, seed)
     X = a .+ (b-a) .* U
     return X
 end
 
 
-function expon_rng(λ, n=1, seed=nothing)
-    U = get_uniform(n, seed)
+function expon_rng(λ, size=1, seed=nothing)
+    U = get_uniform(size, seed)
     X = -λ .* log.(1 .- U)  # could also use just U
     return X
 end
 
 
-function erlang_rng(k, λ, n=1, seed=nothing)
-    U = zeros(k, n)
+function erlang_rng(k, λ, size=1, seed=nothing)
+    U = zeros(k, size)
     for i in 1:k
-        U[i, :] = get_uniform(n, seed)
+        U[i, :] = get_uniform(size, seed)
     end
     # X = (-λ/k) .* log.(prod(U, dims=1))
     X = (-1/λ) .* log.(prod(U, dims=1))  # Here (-1/λ) represents mean
@@ -61,14 +61,30 @@ function erlang_rng(k, λ, n=1, seed=nothing)
 end
 
 
-function bernoulli_rng(p, n=1, seed=nothing)
-    U = get_uniform(n, seed)
-    X = U .< p
+function bernoulli_rng(p, size=1, seed=nothing)
+    U = get_uniform(size, seed)
+    X = (1 - p) .<= U
     return X
 end
 
-u = bernoulli_rng(.2342, 10000)
-sum(u)/10000
+
+function binomial_rng(p, n, size=1, seed=nothing)
+    U = zeros(size, n)
+    for i in 1:size
+        U[i, :] = bernoulli_rng(p, n, seed)
+    end
+    X = sum(U, dims=2)
+    return X
+end
 
 # End of Module
 end
+
+# u = binomial_rng(.2342, 1000, 1000)
+# sum(u)/1000
+
+# using Distributions
+
+# d = Distributions.Binomial(1000, .2342)
+# z = rand(d, 1000)
+# sum(z)/1000
