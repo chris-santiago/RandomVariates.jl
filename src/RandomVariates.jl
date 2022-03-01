@@ -1,6 +1,6 @@
 module RandomVariates
 
-export uniform_rng, expon_rng, erlang_rng, bernoulli_rng, binomial_rng
+export uniform_rng, expon_rng, erlang_rng, bernoulli_rng, binomial_rng, poisson_rng
 
 using Dates
 
@@ -33,7 +33,7 @@ function gen_prn()
 end
 
 
-function get_uniform(n, seed=nothing)
+function get_std_uniform(size, seed=nothing)
     if !isnothing(seed)
         set_user_seed(seed)
     end
@@ -44,14 +44,14 @@ end
 
 
 function uniform_rng(a, b, size=1, seed=nothing)
-    U = get_uniform(size, seed)
+    U = get_std_uniform(size, seed)
     X = a .+ (b-a) .* U
     return X
 end
 
 
 function expon_rng(λ, size=1, seed=nothing)
-    U = get_uniform(size, seed)
+    U = get_std_uniform(size, seed)
     X = (-1/λ) .* log.(1 .- U)  # could also use just U
     return X
 end
@@ -60,7 +60,7 @@ end
 function erlang_rng(k, λ, size=1, seed=nothing)
     U = zeros(k, size)
     for i in 1:k
-        U[i, :] = get_uniform(size, seed)
+        U[i, :] = get_std_uniform(size, seed)
     end
     # X = (-λ/k) .* log.(prod(U, dims=1))
     X = (-1/λ) .* log.(prod(U, dims=1))  # Here (-1/λ) represents mean
@@ -69,7 +69,7 @@ end
 
 
 function bernoulli_rng(p, size=1, seed=nothing)
-    U = get_uniform(size, seed)
+    U = get_std_uniform(size, seed)
     X = (1 - p) .<= U
     return X
 end
@@ -90,6 +90,22 @@ function poisson_rng(λ, size=1, seed=nothing)
     for i in 1:size
         X[i] = sum(cumsum(expon_rng(λ, λ*1e2, seed)) .< 1)
     end
+    return X
+end
+
+
+function get_std_normal(size=1, seed=nothing)
+    a = sqrt.(-2 .* log.(get_std_uniform(size, seed)))
+    b = 2 * π .* get_std_uniform(size, seed)
+    A = a .* sin.(b)
+    B = a .* cos.(b)
+    X = collect(Iterators.flatten(zip(A, B)))[1:size]
+    return X
+end
+
+
+function normal_rng(μ=0, σ²=1, size=1, seed=nothing)
+    X = get_std_normal(size, seed) .* σ² .+ μ
     return X
 end
 
