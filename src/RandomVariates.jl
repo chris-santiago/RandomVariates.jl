@@ -4,34 +4,41 @@ export uniform_rng, expon_rng, erlang_rng, bernoulli_rng, binomial_rng
 
 using Dates
 
+ENV["JULIA_SEED"] = Dates.value(Dates.now())
+
 A = 16807
 MOD = 2^31 - 1
 
 
-function get_seed(seed::Nothing)
-	return Dates.value(Dates.now())
+function set_seed(seed::Int)
+    ENV["JULIA_SEED"] = seed
 end
 
 
-function get_seed(seed::Int)
-	return seed
+function set_user_seed(seed::Int)
+    ENV["JULIA_SEED"] = seed * 7856209
 end
 
 
-function gen_prn(seed=nothing)
-	seed = get_seed(seed)
-	return mod(A * seed, MOD)
+function get_seed()
+	return parse(Int, ENV["JULIA_SEED"])
+end
+
+
+function gen_prn()
+    seed = get_seed()
+	prn = mod(A * seed, MOD)
+    set_seed(prn)
+    return prn
 end
 
 
 function get_uniform(n, seed=nothing)
-	U = zeros(n)
-	x = gen_prn(seed)
-	U[1] = x/MOD
-	for i in 2:n
-		x = gen_prn(x)
-		U[i] = x/MOD
-	end
+    if !isnothing(seed)
+        set_user_seed(seed)
+    end
+    U = [gen_prn() for i in 1:n]
+    U = U./MOD
 	return U
 end
 
@@ -77,14 +84,11 @@ function binomial_rng(p, n, size=1, seed=nothing)
     return X
 end
 
+# use Base.Iterators.takewhile
+# function poisson_rng(λ, size=1, seed=nothing)
+#     X = 0
+#     while cumsum(X) <= 1
+
+
 # End of Module
 end
-
-# u = binomial_rng(.2342, 1000, 1000)
-# sum(u)/1000
-
-# using Distributions
-
-# d = Distributions.Binomial(1000, .2342)
-# z = rand(d, 1000)
-# sum(z)/1000
