@@ -15,17 +15,18 @@ function set_seed(seed::Int)
 end
 
 
+function set_user_seed(seed::Int)
+    ENV["JULIA_SEED"] = seed * 7856209
+end
+
+
 function get_seed()
 	return parse(Int, ENV["JULIA_SEED"])
 end
 
 
-function gen_prn(seed=nothing)
-    if isnothing(seed)
-        seed = get_seed()
-    else
-        seed *= 73965
-    end
+function gen_prn()
+    seed = get_seed()
 	prn = mod(A * seed, MOD)
     set_seed(prn)
     return prn
@@ -33,15 +34,11 @@ end
 
 
 function get_uniform(n, seed=nothing)
-    U = [gen_prn(seed) for i in 1:n]  # this doesn't work for user-set seeds
+    if !isnothing(seed)
+        set_user_seed(seed)
+    end
+    U = [gen_prn() for i in 1:n]
     U = U./MOD
-	# U = zeros(n)
-	# x = gen_prn(seed)
-	# U[1] = x/MOD
-	# for i in 2:n
-	# 	x = gen_prn(x)
-	# 	U[i] = x/MOD
-	# end
 	return U
 end
 
