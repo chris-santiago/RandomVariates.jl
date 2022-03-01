@@ -4,7 +4,7 @@ export uniform_rng, expon_rng, erlang_rng, bernoulli_rng, binomial_rng
 
 using Dates
 
-ENV["JULIA_SEED"] = Dates.value(Dates.now())
+ENV["JULIA_SEED"] = Dates.value(Dates.now())  # Use current epoch time as default seed
 
 A = 16807
 MOD = 2^31 - 1
@@ -52,7 +52,7 @@ end
 
 function expon_rng(λ, size=1, seed=nothing)
     U = get_uniform(size, seed)
-    X = -λ .* log.(1 .- U)  # could also use just U
+    X = (-1/λ) .* log.(1 .- U)  # could also use just U
     return X
 end
 
@@ -76,7 +76,7 @@ end
 
 
 function binomial_rng(p, n, size=1, seed=nothing)
-    U = zeros(size, n)
+    U = zeros(Int, size, n)
     for i in 1:size
         U[i, :] = bernoulli_rng(p, n, seed)
     end
@@ -84,10 +84,14 @@ function binomial_rng(p, n, size=1, seed=nothing)
     return X
 end
 
-# use Base.Iterators.takewhile
-# function poisson_rng(λ, size=1, seed=nothing)
-#     X = 0
-#     while cumsum(X) <= 1
+
+function poisson_rng(λ, size=1, seed=nothing)
+    X = zeros(Int, size)
+    for i in 1:size
+        X[i] = sum(cumsum(expon_rng(λ, λ*1e2, seed)) .< 1)
+    end
+    return X
+end
 
 
 # End of Module
