@@ -36,34 +36,35 @@ function gen_prn()
 end
 
 
-function get_std_uniform(size, seed=nothing)
+function get_std_uniform(size=1; seed=nothing)
     if !isnothing(seed)
         set_user_seed(seed)
     end
-    U = [gen_prn() for i in 1:size]
+    U = zeros(size)  # preallocate array
+    U .= gen_prn.()  # vectorize assignment for efficiency
     U = U./MOD
 	return U
 end
 
 
-function uniform_rng(a, b, size=1, seed=nothing)
-    U = get_std_uniform(size, seed)
+function uniform_rng(a, b, size=1; seed=nothing)
+    U = get_std_uniform(size, seed=seed)
     X = a .+ (b-a) .* U
     return X
 end
 
 
-function expon_rng(λ, size=1, seed=nothing)
-    U = get_std_uniform(size, seed)
+function expon_rng(λ, size=1; seed=nothing)
+    U = get_std_uniform(size, seed=seed)
     X = (-1/λ) .* log.(1 .- U)  # could also use just U
     return X
 end
 
 
-function erlang_rng(k, λ, size=1, seed=nothing)
+function erlang_rng(k, λ, size=1; seed=nothing)
     U = zeros(k, size)
     for i in 1:k
-        U[i, :] = get_std_uniform(size, seed)
+        U[i, :] = get_std_uniform(size, seed=seed)
     end
     # X = (-λ/k) .* log.(prod(U, dims=1))
     X = (-1/λ) .* log.(prod(U, dims=1))  # Here (-1/λ) represents mean
@@ -71,35 +72,35 @@ function erlang_rng(k, λ, size=1, seed=nothing)
 end
 
 
-function bernoulli_rng(p, size=1, seed=nothing)
-    U = get_std_uniform(size, seed)
+function bernoulli_rng(p, size=1; seed=nothing)
+    U = get_std_uniform(size, seed=seed)
     X = (1 - p) .<= U
     return X
 end
 
 
-function binomial_rng(p, n, size=1, seed=nothing)
+function binomial_rng(p, n, size=1; seed=nothing)
     U = zeros(Int, size, n)
     for i in 1:size
-        U[i, :] = bernoulli_rng(p, n, seed)
+        U[i, :] = bernoulli_rng(p, n, seed=seed)
     end
     X = sum(U, dims=2)
     return X
 end
 
 
-function poisson_rng(λ, size=1, seed=nothing)
+function poisson_rng(λ, size=1; seed=nothing)
     X = zeros(Int, size)
     for i in 1:size
-        X[i] = sum(cumsum(expon_rng(λ, λ*1e2, seed)) .< 1)
+        X[i] = sum(cumsum(expon_rng(λ, λ*1e2, seed=seed)) .< 1)
     end
     return X
 end
 
 
-function get_std_normal(size=1, seed=nothing)
-    a = sqrt.(-2 .* log.(get_std_uniform(size, seed)))
-    b = 2 * π .* get_std_uniform(size, seed)
+function get_std_normal(size=1; seed=nothing)
+    a = sqrt.(-2 .* log.(get_std_uniform(size, seed=seed)))
+    b = 2 * π .* get_std_uniform(size, seed=seed)
     A = a .* sin.(b)
     B = a .* cos.(b)
     X = collect(Iterators.flatten(zip(A, B)))[1:size]
@@ -107,8 +108,8 @@ function get_std_normal(size=1, seed=nothing)
 end
 
 
-function normal_rng(μ=0, σ²=1, size=1, seed=nothing)
-    X = get_std_normal(size, seed) .* σ² .+ μ
+function normal_rng(μ=0, σ²=1, size=1; seed=nothing)
+    X = get_std_normal(size, seed=seed) .* σ² .+ μ
     return X
 end
 
