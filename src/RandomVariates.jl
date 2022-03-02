@@ -72,9 +72,23 @@ function erlang_rng(k, λ, size=1; seed=nothing)
 end
 
 
+function weibull_rng(λ, β, size=1; seed=nothing)
+    U = get_std_uniform(size, seed=seed)
+    X = (1/λ) .* (-log.(1 .- U)) .^ (1/β)
+    return X
+end
+
+
 function bernoulli_rng(p, size=1; seed=nothing)
     U = get_std_uniform(size, seed=seed)
     X = (1 - p) .<= U
+    return X
+end
+
+
+function geometric_rng(p, size=1; seed=nothing)
+    U = get_std_uniform(size, seed=seed)
+    X = ceil.(Int, log.(1 .- U) ./ log(1 - p))
     return X
 end
 
