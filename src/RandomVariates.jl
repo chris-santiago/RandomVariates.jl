@@ -128,33 +128,31 @@ function normal_rng(μ=0, σ²=1, size=1; seed=nothing)
 end
 
 
-function get_gamma_prn(α, β=1; seed=nothing)  # slow
-    if α < 1
-        u = get_std_uniform(seed=seed)[1]
-        x = get_gamma_prn(α+1, β)
-        x *= u^(1/α)
-        return x
-    end
+function get_gamma_prn(α, β=1; seed=nothing)
     d = α - (1/3)
     c = 1 / sqrt(9*d)
-    z = get_std_normal(seed=seed)[1]
     while true
-        v = 0
-        while v <= 0
+        z = get_std_normal(seed=seed)[1]
+        if z > -1/c
             v = (1 + c * z) ^ 3
-        end
-        u = get_std_uniform(seed=seed)[1]
-        if u < 1 - 0.331 * z^4
-            return d * v / β
-        end
-        if log(u) < 0.5 * z^2 + d * (1 - v + log(v))
-            return d * v / β
+            u = get_std_uniform(seed=seed)[1]
+            if log(u) <= (0.5 * z^2 + d - (d * v + d * log(v)))
+                return d * v / β
+            end
         end
     end
 end
 
 
 function gamma_rng(α, β=1, size=1; seed=nothing)
+    if α < 1
+        α += 1
+        X = zeros(size)
+        U = get_std_uniform(size, seed=seed)
+        X .= get_gamma_prn.(α, β, seed=seed)
+        X .*= U.^(1/α)
+        return X
+    end
     X = zeros(size)
     X .= get_gamma_prn.(α, β, seed=seed)
     return X
