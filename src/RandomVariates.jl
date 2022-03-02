@@ -6,8 +6,11 @@ using Dates
 
 SEED = Dates.value(Dates.now())  # Use current epoch time as default seed
 
-const A = 16807
-const MOD = 2^31 - 1
+# using POSIX params for LCG
+# https://en.wikipedia.org/wiki/Linear_congruential_generator#Parameters_in_common_use
+const A = 25214903917
+const C = 11
+const MOD = 2^48
 
 
 function set_seed(seed::Int)
@@ -27,7 +30,7 @@ end
 
 function gen_prn()
     seed = get_seed()
-	prn = mod(A * seed, MOD)
+	prn = mod(A * seed + C, MOD)
     set_seed(prn)
     return prn
 end
