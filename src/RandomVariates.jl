@@ -128,5 +128,19 @@ function normal_rng(μ=0, σ²=1, size=1; seed=nothing)
 end
 
 
+function gamma_rng()
+    throw(error("Not Implemented"))
+end
+
+
+function neg_binomial_rng()
+    throw(error("Not Implemented"))
+end
+
+
+function beta_rng()
+    throw(error("Not Implemented"))
+end
+
 # End of Module
 end
