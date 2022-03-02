@@ -20,3 +20,6 @@ sum(z)/1000
 e = RandomVariates.expon_rng(1, 10000)
 exp_plot = plot(x=e, Geom.histogram(density=true))
 exp_plot |> PNG("expon.png", 4inch, 4inch)
+
+x = RandomVariates.gamma_rng(1/2, 2, 1000)
+plot(x=x, Geom.histogram(density=false))
