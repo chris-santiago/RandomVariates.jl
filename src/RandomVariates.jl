@@ -65,7 +65,7 @@ end
 """
     get_std_normal(size=1, seed=nothing)
 
-Generate a `size` element array of random variables from a Uniform(0,1) distribution.
+Generate a `size` element array of random variables from a standard Uniform(0,1) distribution.
 
 # Examples
 
@@ -337,6 +337,39 @@ function binomial_rng(p::AbstractFloat, n::Int, size::Union{Int, Tuple{Vararg{In
 end
 
 
+"""
+    poisson_rng(p, n, size=1, seed=nothing)
+
+Generate a `size` element array of random variables from a Poisson(`λ`) distribution.
+
+# Examples
+
+```julia-repl
+julia> poisson_rng(3)
+1×1 Matrix{Int64}:
+ 7
+```
+
+```julia-repl
+julia> poisson_rng(10, 5)
+5×1 Matrix{Int64}:
+ 13
+ 11
+ 10
+  8
+ 15
+
+```julia-repl
+julia> poisson_rng(10, (5,5))
+5×5×1 Array{Int64, 3}:
+[:, :, 1] =
+ 11  15   9  11   9
+  8  15  13  10   9
+ 11  12   4  10   6
+  7   9  13  11   7
+ 13   7  10  10  14
+```
+"""
 function poisson_rng(λ::Real, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
     n = ceil(Int, λ*1e2)  # ensure n is integer
     U = expon_rng(λ, (size..., n), seed=seed)
@@ -346,6 +379,36 @@ function poisson_rng(λ::Real, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Uni
 end
 
 
+"""
+    get_std_normal(size=1, seed=nothing)
+
+Generate a `size` element array of random variables from a standard Normal(0, 1) distribution.
+
+# Examples
+
+```julia-repl
+julia> get_std_normal()
+1-element Vector{Float64}:
+ 0.6315076033452351
+```
+
+```julia-repl
+julia> get_std_normal(5, seed=43)
+5-element Vector{Float64}:
+  1.2311463458421277
+  1.7786409025309897
+ -0.4178415161339713
+  0.3518755172644067
+ -0.16742990320047046
+```
+
+```julia-repl
+julia> get_std_normal((2,2))
+2×2 Matrix{Float64}:
+ -0.900365   -0.432759
+ -0.0350299   1.55754
+```
+"""
 function get_std_normal(size::Int=1; seed::Union{Int, Nothing}=nothing)
     a = sqrt.(-2 .* log.(get_std_uniform(size, seed=seed)))
     b = 2 * π .* get_std_uniform(size, seed=seed)
@@ -356,7 +419,40 @@ function get_std_normal(size::Int=1; seed::Union{Int, Nothing}=nothing)
 end
 
 
-function normal_rng(μ::Real=0, σ²::Real=1, size::Int=1; seed::Union{Int, Nothing}=nothing)
+function get_std_normal(size::Tuple{Vararg{Int}}; seed::Union{Int, Nothing}=nothing)
+    X = get_std_normal(reduce(*, size), seed=seed)
+    return reshape(X, size)
+end
+
+
+"""
+    normal_rng(μ, σ², size=1, seed=nothing)
+
+Generate a `size` element array of random variables from a Normal(`μ`, `σ²`) distribution.
+
+# Examples
+
+```julia-repl
+julia> normal_rng()
+1-element Vector{Float64}:
+ 0.03130435813519526
+```
+
+```julia-repl
+julia> normal_rng(0,1,2)
+2-element Vector{Float64}:
+  0.746569392416735
+ -0.548542754157059
+```
+
+```julia-repl
+julia> normal_rng(0,1,(2,2))
+2×2 Matrix{Float64}:
+ -0.640505   0.30303
+ -0.0556832  0.714122
+```
+"""
+function normal_rng(μ::Real=0, σ²::Real=1, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
     X = get_std_normal(size, seed=seed) .* σ² .+ μ
     return X
 end
