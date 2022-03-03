@@ -1,10 +1,11 @@
 module RandomVariates
 
-export SEED, A, MOD, uniform_rng, expon_rng, erlang_rng, bernoulli_rng, binomial_rng, poisson_rng, normal_rng
+export SEED, A, MOD, uniform_rng, expon_rng, erlang_rng, bernoulli_rng, 
+binomial_rng, poisson_rng, normal_rng, gamma_rng, weibull_rng, geometric_rng
 
 using Dates
 
-SEED = Dates.value(Dates.now())  # Use current epoch time as default seed
+global SEED = Dates.value(Dates.now())  # Use current epoch time as default seed
 
 # using POSIX params for LCG
 # https://en.wikipedia.org/wiki/Linear_congruential_generator#Parameters_in_common_use
@@ -12,22 +13,47 @@ const A = 25214903917
 const C = 11
 const MOD = 2^48
 
+"""
+    set_seed(seed::Int)
 
+Set the global `SEED` variable.
+"""
 function set_seed(seed::Int)
     global SEED = seed
 end
 
 
+"""
+    set_user_seed(seed::Int)
+
+Set a user-defined seed as global `SEED` variable.
+"""
 function set_user_seed(seed::Int)
     global SEED = seed * 7856209
 end
 
 
+"""
+    get_seed()
+
+Get the global `SEED` variable.
+"""
 function get_seed()
 	return SEED
 end
 
 
+"""
+    gen_prn()
+
+Generate a pseudorandom number.
+
+# Notes
+
+Uses a linear congruential generator (LCG) with [POSIX parameters](https://en.wikipedia.org/wiki/Linear_congruential_generator#Parameters_in_common_use):
+
+``25214903917 x_1 + 11 \\quad mod \\quad 2^{48}``
+"""
 function gen_prn()
     seed = get_seed()
 	prn = mod(A * seed + C, MOD)
