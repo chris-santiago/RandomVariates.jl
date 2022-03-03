@@ -52,7 +52,7 @@ Generate a pseudorandom number.
 
 Uses a linear congruential generator (LCG) with [POSIX parameters](https://en.wikipedia.org/wiki/Linear_congruential_generator#Parameters_in_common_use):
 
-``25214903917 x_1 + 11 \\quad mod \\quad 2^{48}``
+``X_n = 25214903917 X_{n-1} + 11 \\quad mod \\quad 2^{48}``
 """
 function gen_prn()
     seed = get_seed()
