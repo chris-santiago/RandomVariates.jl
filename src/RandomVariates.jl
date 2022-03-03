@@ -337,11 +337,11 @@ function binomial_rng(p::AbstractFloat, n::Int, size::Union{Int, Tuple{Vararg{In
 end
 
 
-function poisson_rng(λ::Real, size::Int=1; seed::Union{Int, Nothing}=nothing)
-    X = zeros(Int, size)
-    for i in 1:size
-        X[i] = sum(cumsum(expon_rng(λ, λ*1e2, seed=seed)) .< 1)
-    end
+function poisson_rng(λ::Real, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
+    n = ceil(Int, λ*1e2)  # ensure n is integer
+    U = expon_rng(λ, (size..., n), seed=seed)
+    # X = sum(cumsum(U, dims=ndims(U)) .< 1, dims=length(size))
+    X = sum(cumsum(U, dims=ndims(U)) .< 1, dims=ndims(U))
     return X
 end
 
