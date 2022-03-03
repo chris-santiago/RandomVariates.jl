@@ -540,8 +540,16 @@ function gamma_rng(α::Real, β::Real=1, size::Union{Int, Tuple{Vararg{Int}}}=1;
 end
 
 
-function neg_binomial_rng()
-    throw(error("Not Implemented"))
+function get_neg_binomial_prn(p, r)
+    U = bernoulli_rng(p, 1000)
+    X = sum(cumsum(U, dims=1) .< r) + 1
+    return X
+end
+
+function neg_binomial_rng(p, r, size)
+    X = zeros(size)
+    X .= get_neg_binomial_prn.(p, r)
+    return X
 end
 
 
