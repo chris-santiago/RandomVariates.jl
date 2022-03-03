@@ -128,7 +128,7 @@ julia> uniform_rng(0, 1, (4,4))
  0.955188   0.155203  0.953206  0.0046541
  0.0923526  0.490721  0.451705  0.516445
  0.661619   0.527063  0.212847  0.832298
- ```
+```
 """
 function uniform_rng(a::Real=0, b::Real=1, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
     U = get_std_uniform(size, seed=seed)
@@ -358,6 +358,7 @@ julia> poisson_rng(10, 5)
  10
   8
  15
+````
 
 ```julia-repl
 julia> poisson_rng(10, (5,5))
