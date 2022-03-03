@@ -439,10 +439,10 @@ julia> normal_rng()
 ```
 
 ```julia-repl
-julia> normal_rng(0,1,2)
+julia> normal_rng(3, 9, 2)
 2-element Vector{Float64}:
-  0.746569392416735
- -0.548542754157059
+  7.362935421449054
+ -1.0173543995738399
 ```
 
 ```julia-repl
