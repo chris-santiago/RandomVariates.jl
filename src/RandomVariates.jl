@@ -62,6 +62,12 @@ function gen_prn()
 end
 
 
+function check_p(p::Real)
+    if (p > 1) || (p < 0)
+        throw(ArgumentError("Parameter `p` must fall between 0 and 1."))
+    end
+end
+
 """
     get_std_normal(size=1, seed=nothing)
 
@@ -265,7 +271,8 @@ julia> bernoulli_rng(.8, (2,2), seed=42)
 ```
 
 """
-function bernoulli_rng(p::AbstractFloat, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
+function bernoulli_rng(p::Real, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
+    check_p(p)
     U = get_std_uniform(size, seed=seed)
     X = (1 - p) .<= U
     return X
@@ -302,7 +309,8 @@ julia> geometric_rng(.8, (2,2), seed=45)
  1  1
 ```
 """
-function geometric_rng(p::AbstractFloat, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
+function geometric_rng(p::Real, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
+    check_p(p)
     U = get_std_uniform(size, seed=seed)
     X = ceil.(Int, log.(1 .- U) ./ log(1 - p))
     return X
@@ -330,7 +338,8 @@ julia> binomial_rng(.3, 10, (2,2))
  2  2
 ```
 """
-function binomial_rng(p::AbstractFloat, n::Int, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
+function binomial_rng(p::Real, n::Int, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
+    check_p(p)
     U = bernoulli_rng(p, (size..., n), seed=seed)
     X = sum(U, dims=ndims(U))  # want sum over final or `n` dimension
     return X
@@ -540,21 +549,26 @@ function gamma_rng(α::Real, β::Real=1, size::Union{Int, Tuple{Vararg{Int}}}=1;
 end
 
 
-function get_neg_binomial_prn(p, r)
-    U = bernoulli_rng(p, 1000)
+function get_neg_binomial_prn(p::Real, r::Int; seed::Union{Int, Nothing}=nothing)
+    check_p(p)
+    U = bernoulli_rng(p, 1000, seed=seed)
     X = sum(cumsum(U, dims=1) .< r) + 1
     return X
 end
 
-function neg_binomial_rng(p, r, size)
+function neg_binomial_rng(p::Real, r::int, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
+    check_p(p)
     X = zeros(size)
-    X .= get_neg_binomial_prn.(p, r)
+    X .= get_neg_binomial_prn.(p, r, seed=seed)
     return X
 end
 
 
-function beta_rng()
-    throw(error("Not Implemented"))
+function beta_rng(α::Real, β::Real, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
+    Y₁ = gamma_rng(α, 1, size, seed=seed)
+    Y₂ = gamma_rng(β, 1, size, seed=seed)
+    X = Y₁ ./ (Y₁ .+ Y₂)
+    return X
 end
 
 # End of Module
