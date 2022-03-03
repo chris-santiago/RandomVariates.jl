@@ -91,7 +91,7 @@ julia> get_std_uniform(5)
  0.917393216014684
 ```
 """
-function get_std_uniform(size::Union{Int, NTuple{3, Int}}=1; seed::Union{Int, Nothing}=nothing)
+function get_std_uniform(size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
     if !isnothing(seed)
         set_user_seed(seed)
     end
@@ -130,7 +130,7 @@ julia> uniform_rng(0, 1, (4,4))
  0.661619   0.527063  0.212847  0.832298
  ```
 """
-function uniform_rng(a::Real=0, b::Real=1, size::Union{Int, NTuple{3, Int}}=1; seed::Union{Int, Nothing}=nothing)
+function uniform_rng(a::Real=0, b::Real=1, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
     U = get_std_uniform(size, seed=seed)
     X = a .+ (b-a) .* U
     return X
@@ -163,7 +163,7 @@ julia> expon_rng(1.2, (2, 2))
  0.746861  0.155614
 ```
 """
-function expon_rng(λ::Real, size::Union{Int, NTuple{3, Int}}=1; seed::Union{Int, Nothing}=nothing)
+function expon_rng(λ::Real, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
     U = get_std_uniform(size, seed=seed)
     X = (-1/λ) .* log.(1 .- U)  # could also use just U
     return X
@@ -191,9 +191,10 @@ julia> erlang_rng(3, 1, (2,2))
  5.46892  2.5633
 ```
 """
-function erlang_rng(k::Int, λ::Real, size::Union{Int, NTuple{2, Int}}=1; seed::Union{Int, Nothing}=nothing)
+function erlang_rng(k::Int, λ::Real, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
     U = get_std_uniform((size..., k), seed=seed)
-    X = (-1/λ) .* log.(prod(U, dims=3))  # Here (-1/λ) represents mean
+    k_dim = ndims(U)  # k is final dimension
+    X = (-1/λ) .* log.(prod(U, dims=k_dim))  # Here (-1/λ) represents mean
     return X
 end
 
@@ -226,33 +227,112 @@ julia> weibull_rng(2, 2, (2,2))
 ```
 
 """
-function weibull_rng(λ::Real, β::Real, size::Union{Int, NTuple{2, Int}}=1; seed::Union{Int, Nothing}=nothing)
+function weibull_rng(λ::Real, β::Real, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
     U = get_std_uniform(size, seed=seed)
     X = (1/λ) .* (-log.(1 .- U)) .^ (1/β)
     return X
 end
 
 
-function bernoulli_rng(p::Float, size::Int=1; seed::Union{Int, Nothing}=nothing)
+"""
+    bernoulli_rng(p, size=1, seed=nothing)
+
+Generate a `size` element array of random variables from a Bernoulli(`p`) distribution.
+
+# Examples
+
+```julia-repl
+julia> bernoulli_rng(.34)
+1-element BitVector:
+ 0
+```
+
+```julia-repl
+julia> bernoulli_rng(.34, 5)
+5-element BitVector:
+ 0
+ 0
+ 1
+ 0
+ 1
+```
+
+```julia-repl
+julia> bernoulli_rng(.8, (2,2), seed=42)
+2×2 BitMatrix:
+ 1  0
+ 0  1
+```
+
+"""
+function bernoulli_rng(p::AbstractFloat, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
     U = get_std_uniform(size, seed=seed)
     X = (1 - p) .<= U
     return X
 end
 
 
-function geometric_rng(p::Float, size::Int=1; seed::Union{Int, Nothing}=nothing)
+"""
+    geometric_rng(p, size=1, seed=nothing)
+
+Generate a `size` element array of random variables from a Geometric(`p`) distribution.
+
+# Examples
+
+```julia-repl
+julia> geometric_rng(.8)
+1-element Vector{Int64}:
+ 1
+```
+
+```julia-repl
+julia> geometric_rng(.8, 5)
+5-element Vector{Int64}:
+ 2
+ 3
+ 1
+ 1
+ 1
+```
+
+```julia-repl
+julia> geometric_rng(.8, (2,2), seed=45)
+2×2 Matrix{Int64}:
+ 1  1
+ 1  1
+```
+"""
+function geometric_rng(p::AbstractFloat, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
     U = get_std_uniform(size, seed=seed)
     X = ceil.(Int, log.(1 .- U) ./ log(1 - p))
     return X
 end
 
 
-function binomial_rng(p::Float, n::Int, size::Int=1; seed::Union{Int, Nothing}=nothing)
-    U = zeros(Int, size, n)
-    for i in 1:size
-        U[i, :] = bernoulli_rng(p, n, seed=seed)
-    end
-    X = sum(U, dims=2)
+"""
+    binomial_rng(p, n, size=1, seed=nothing)
+
+Generate a `size` element array of random variables from a Binomial(`p`, `n`) distribution.
+
+# Examples
+
+```julia-repl
+julia> binomial_rng(.3, 10)
+1×1 Matrix{Int64}:
+ 3
+```
+
+```julia-repl
+julia> binomial_rng(.3, 10, (2,2))
+2×2×1 Array{Int64, 3}:
+[:, :, 1] =
+ 2  1
+ 2  2
+```
+"""
+function binomial_rng(p::AbstractFloat, n::Int, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
+    U = bernoulli_rng(p, (size..., n), seed=seed)
+    X = sum(U, dims=ndims(U))  # want sum over final or `n` dimension
     return X
 end
 
