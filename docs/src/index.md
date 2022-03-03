@@ -2,10 +2,9 @@
 
 Documentation for RandomVariates.jl
 
-## Functions
+## Content
 
-```@autodocs
-Modules = [RandomVariates]
+```@contents
 ```
 
 ## Index

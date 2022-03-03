@@ -8,7 +8,10 @@ makedocs(
     pages = [
         "Home" => "index.md",
         "prn.md",
-        
+        "Uniform" => "uniform.md",
+        "Normal" => "normal.md",
+        "Discrete" => "discrete.md",
+        "Continuous" => "continuous.md"
     ]
 )
 

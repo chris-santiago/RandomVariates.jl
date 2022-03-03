@@ -358,7 +358,7 @@ julia> poisson_rng(10, 5)
  10
   8
  15
-````
+```
 
 ```julia-repl
 julia> poisson_rng(10, (5,5))
