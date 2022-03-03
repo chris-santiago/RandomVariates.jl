@@ -91,7 +91,7 @@ julia> get_std_uniform(5)
  0.917393216014684
 ```
 """
-function get_std_uniform(size::Union{Int, NTuple{3, Int}}=1; seed::Union{Int, Nothing}=nothing)
+function get_std_uniform(size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
     if !isnothing(seed)
         set_user_seed(seed)
     end
@@ -130,7 +130,7 @@ julia> uniform_rng(0, 1, (4,4))
  0.661619   0.527063  0.212847  0.832298
  ```
 """
-function uniform_rng(a::Real=0, b::Real=1, size::Union{Int, NTuple{3, Int}}=1; seed::Union{Int, Nothing}=nothing)
+function uniform_rng(a::Real=0, b::Real=1, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
     U = get_std_uniform(size, seed=seed)
     X = a .+ (b-a) .* U
     return X
@@ -163,7 +163,7 @@ julia> expon_rng(1.2, (2, 2))
  0.746861  0.155614
 ```
 """
-function expon_rng(λ::Real, size::Union{Int, NTuple{3, Int}}=1; seed::Union{Int, Nothing}=nothing)
+function expon_rng(λ::Real, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
     U = get_std_uniform(size, seed=seed)
     X = (-1/λ) .* log.(1 .- U)  # could also use just U
     return X
@@ -226,14 +226,14 @@ julia> weibull_rng(2, 2, (2,2))
 ```
 
 """
-function weibull_rng(λ::Real, β::Real, size::Union{Int, NTuple{2, Int}}=1; seed::Union{Int, Nothing}=nothing)
+function weibull_rng(λ::Real, β::Real, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
     U = get_std_uniform(size, seed=seed)
     X = (1/λ) .* (-log.(1 .- U)) .^ (1/β)
     return X
 end
 
 
-function bernoulli_rng(p::Float, size::Int=1; seed::Union{Int, Nothing}=nothing)
+function bernoulli_rng(p::AbstractFloat, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
     U = get_std_uniform(size, seed=seed)
     X = (1 - p) .<= U
     return X
