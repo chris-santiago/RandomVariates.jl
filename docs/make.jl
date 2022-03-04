@@ -4,7 +4,15 @@ using RandomVariates
 makedocs(
     sitename = "RandomVariates",
     format = Documenter.HTML(),
-    modules = [RandomVariates]
+    modules = [RandomVariates],
+    pages = [
+        "Home" => "index.md",
+        "prn.md",
+        "Uniform" => "uniform.md",
+        "Normal" => "normal.md",
+        "Discrete" => "discrete.md",
+        "Continuous" => "continuous.md"
+    ]
 )
 
 # Documenter can also automatically deploy documentation to gh-pages.

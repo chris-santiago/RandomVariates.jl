@@ -62,10 +62,16 @@ function gen_prn()
 end
 
 
+function check_p(p::Real)
+    if (p > 1) || (p < 0)
+        throw(ArgumentError("Parameter `p` must fall between 0 and 1."))
+    end
+end
+
 """
     get_std_normal(size=1, seed=nothing)
 
-Generate a `size` element array of random variables from a Uniform(0,1) distribution.
+Generate a `size` element array of random variables from a standard Uniform(0,1) distribution.
 
 # Examples
 
@@ -128,7 +134,7 @@ julia> uniform_rng(0, 1, (4,4))
  0.955188   0.155203  0.953206  0.0046541
  0.0923526  0.490721  0.451705  0.516445
  0.661619   0.527063  0.212847  0.832298
- ```
+```
 """
 function uniform_rng(a::Real=0, b::Real=1, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
     U = get_std_uniform(size, seed=seed)
@@ -265,7 +271,8 @@ julia> bernoulli_rng(.8, (2,2), seed=42)
 ```
 
 """
-function bernoulli_rng(p::AbstractFloat, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
+function bernoulli_rng(p::Real, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
+    check_p(p)
     U = get_std_uniform(size, seed=seed)
     X = (1 - p) .<= U
     return X
@@ -302,7 +309,8 @@ julia> geometric_rng(.8, (2,2), seed=45)
  1  1
 ```
 """
-function geometric_rng(p::AbstractFloat, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
+function geometric_rng(p::Real, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
+    check_p(p)
     U = get_std_uniform(size, seed=seed)
     X = ceil.(Int, log.(1 .- U) ./ log(1 - p))
     return X
@@ -330,22 +338,87 @@ julia> binomial_rng(.3, 10, (2,2))
  2  2
 ```
 """
-function binomial_rng(p::AbstractFloat, n::Int, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
+function binomial_rng(p::Real, n::Int, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
+    check_p(p)
     U = bernoulli_rng(p, (size..., n), seed=seed)
     X = sum(U, dims=ndims(U))  # want sum over final or `n` dimension
     return X
 end
 
 
-function poisson_rng(λ::Real, size::Int=1; seed::Union{Int, Nothing}=nothing)
-    X = zeros(Int, size)
-    for i in 1:size
-        X[i] = sum(cumsum(expon_rng(λ, λ*1e2, seed=seed)) .< 1)
-    end
+"""
+    poisson_rng(p, n, size=1, seed=nothing)
+
+Generate a `size` element array of random variables from a Poisson(`λ`) distribution.
+
+# Examples
+
+```julia-repl
+julia> poisson_rng(3)
+1×1 Matrix{Int64}:
+ 7
+```
+
+```julia-repl
+julia> poisson_rng(10, 5)
+5×1 Matrix{Int64}:
+ 13
+ 11
+ 10
+  8
+ 15
+```
+
+```julia-repl
+julia> poisson_rng(10, (5,5))
+5×5×1 Array{Int64, 3}:
+[:, :, 1] =
+ 11  15   9  11   9
+  8  15  13  10   9
+ 11  12   4  10   6
+  7   9  13  11   7
+ 13   7  10  10  14
+```
+"""
+function poisson_rng(λ::Real, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
+    n = ceil(Int, λ*1e2)  # ensure n is integer
+    U = expon_rng(λ, (size..., n), seed=seed)
+    # X = sum(cumsum(U, dims=ndims(U)) .< 1, dims=length(size))
+    X = sum(cumsum(U, dims=ndims(U)) .< 1, dims=ndims(U))
     return X
 end
 
 
+"""
+    get_std_normal(size=1, seed=nothing)
+
+Generate a `size` element array of random variables from a standard Normal(0, 1) distribution.
+
+# Examples
+
+```julia-repl
+julia> get_std_normal()
+1-element Vector{Float64}:
+ 0.6315076033452351
+```
+
+```julia-repl
+julia> get_std_normal(5, seed=43)
+5-element Vector{Float64}:
+  1.2311463458421277
+  1.7786409025309897
+ -0.4178415161339713
+  0.3518755172644067
+ -0.16742990320047046
+```
+
+```julia-repl
+julia> get_std_normal((2,2))
+2×2 Matrix{Float64}:
+ -0.900365   -0.432759
+ -0.0350299   1.55754
+```
+"""
 function get_std_normal(size::Int=1; seed::Union{Int, Nothing}=nothing)
     a = sqrt.(-2 .* log.(get_std_uniform(size, seed=seed)))
     b = 2 * π .* get_std_uniform(size, seed=seed)
@@ -356,12 +429,66 @@ function get_std_normal(size::Int=1; seed::Union{Int, Nothing}=nothing)
 end
 
 
-function normal_rng(μ::Real=0, σ²::Real=1, size::Int=1; seed::Union{Int, Nothing}=nothing)
+function get_std_normal(size::Tuple{Vararg{Int}}; seed::Union{Int, Nothing}=nothing)
+    X = get_std_normal(reduce(*, size), seed=seed)
+    return reshape(X, size)
+end
+
+
+"""
+    normal_rng(μ, σ², size=1, seed=nothing)
+
+Generate a `size` element array of random variables from a Normal(`μ`, `σ²`) distribution.
+
+# Examples
+
+```julia-repl
+julia> normal_rng()
+1-element Vector{Float64}:
+ 0.03130435813519526
+```
+
+```julia-repl
+julia> normal_rng(3, 9, 2)
+2-element Vector{Float64}:
+  7.362935421449054
+ -1.0173543995738399
+```
+
+```julia-repl
+julia> normal_rng(0,1,(2,2))
+2×2 Matrix{Float64}:
+ -0.640505   0.30303
+ -0.0556832  0.714122
+```
+"""
+function normal_rng(μ::Real=0, σ²::Real=1, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
     X = get_std_normal(size, seed=seed) .* σ² .+ μ
     return X
 end
 
 
+"""
+    get_gamma_prn(α, β, seed=nothing)
+
+Generate a random variable from a Gamma(α, β) distribution.
+
+# Notes
+
+This method cannot handle values of α < 1. Users should use [`gamma_rng`](@ref), instead.
+
+# Examples
+
+```julia-repl
+julia> get_gamma_prn(1)
+0.11697493392617847
+```
+
+```julia-repl
+julia> get_gamma_prn(1, 2)
+0.09261426424752814
+```
+"""
 function get_gamma_prn(α::Real, β::Real=1; seed::Union{Int, Nothing}=nothing)
     d = α - (1/3)
     c = 1 / sqrt(9*d)
@@ -378,13 +505,41 @@ function get_gamma_prn(α::Real, β::Real=1; seed::Union{Int, Nothing}=nothing)
 end
 
 
+"""
+    gamma_rng(α, β, size=1, seed=nothing)
 
-function gamma_rng(α::Real, β::Real=1, size::Int=1; seed::Union{Int, Nothing}=nothing)
+Generate a `size` element array of random variables from a Gamma(α, β) distribution.
+
+# Examples
+
+```julia-repl
+julia> gamma_rng(1,1)
+1-element Vector{Float64}:
+ 0.5190236735858542
+```
+
+```julia-repl
+julia> gamma_rng(1,1,4)
+4-element Vector{Float64}:
+ 0.3035517926878862
+ 0.5765419737109622
+ 0.44121996206333797
+ 0.7325887616559309
+```
+
+```julia-repl
+julia> gamma_rng(1,1,(2,2))
+2×2 Matrix{Float64}:
+ 0.228818  0.88849
+ 0.665729  1.01668
+```
+"""
+function gamma_rng(α::Real, β::Real=1, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
     if α < 1
         α += 1
         X = zeros(size)
-        U = get_std_uniform(size, seed=seed)
         X .= get_gamma_prn.(α, β, seed=seed)
+        U = get_std_uniform(size, seed=seed)
         X .*= U.^(1/α)
         return X
     end
@@ -394,13 +549,26 @@ function gamma_rng(α::Real, β::Real=1, size::Int=1; seed::Union{Int, Nothing}=
 end
 
 
-function neg_binomial_rng()
-    throw(error("Not Implemented"))
+function get_neg_binomial_prn(p::Real, r::Int; seed::Union{Int, Nothing}=nothing)
+    check_p(p)
+    U = bernoulli_rng(p, 1000, seed=seed)
+    X = sum(cumsum(U, dims=1) .< r) + 1
+    return X
+end
+
+function neg_binomial_rng(p::Real, r::int, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
+    check_p(p)
+    X = zeros(size)
+    X .= get_neg_binomial_prn.(p, r, seed=seed)
+    return X
 end
 
 
-function beta_rng()
-    throw(error("Not Implemented"))
+function beta_rng(α::Real, β::Real, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
+    Y₁ = gamma_rng(α, 1, size, seed=seed)
+    Y₂ = gamma_rng(β, 1, size, seed=seed)
+    X = Y₁ ./ (Y₁ .+ Y₂)
+    return X
 end
 
 # End of Module
