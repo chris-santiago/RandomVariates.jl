@@ -1,6 +1,7 @@
 module RandomVariates
 
-export SEED, A, C, MOD,
+export
+# SEED, A, C, MOD,
 bernoulli_rng,
 beta_rng,
 binomial_rng,
