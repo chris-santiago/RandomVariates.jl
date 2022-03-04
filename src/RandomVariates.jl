@@ -79,6 +79,10 @@ function get_seed()
 end
 
 
+"""
+    check_p(p::Real)
+Check that parameter `p` falls between 0 and 1.
+"""
 function check_p(p::Real)
     if (p > 1) || (p < 0)
         throw(ArgumentError("Parameter `p` must fall between 0 and 1."))

@@ -23,3 +23,9 @@ RandomVariates.weibull_rng
 ```@docs
 RandomVariates.gamma_rng
 ```
+
+## Beta
+
+```@docs
+RandomVariates.beta_rng
+```
