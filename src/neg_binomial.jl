@@ -1,18 +1,17 @@
 """
-    get_neg_binomial_prn(α, β, size=1, seed=nothing)
+    get_neg_binomial_prn(α, β, size=1; seed=nothing)
 
-Generate a random variable from a Negative Binomial(`p`, `r`) distribution.
+Generate a random variable from a Negative Binomial(`p`, `r`) distribution. Optionally you can set a specific seed.
 
 # Examples
 
 ```julia-repl
 julia> get_neg_binomial_prn(.2, 2)
-16
-```
+ 16
 
-```julia-repl
 julia> get_neg_binomial_prn(.2, 2, seed=42)
-6
+ 6
+
 ```
 """
 function get_neg_binomial_prn(p::Real, r::Int; seed::Union{Int, Nothing}=nothing)
@@ -24,9 +23,9 @@ end
 
 
 """
-    neg_binomial_rng(α, β, size=1, seed=nothing)
+    neg_binomial_rng(α, β, size=1; seed=nothing)
 
-Generate a `size` element array of random variables from a Negative Binomial(`p`, `r`) distribution.
+Generate a `size` element array of random variables from a Negative Binomial(`p`, `r`) distribution. Optionally you can set a specific seed.
 
 # Examples
 
@@ -34,9 +33,7 @@ Generate a `size` element array of random variables from a Negative Binomial(`p`
 julia> neg_binomial_rng(.5, 2)
 1-element Vector{Float64}:
  3.0
-```
 
-```julia-repl
 julia> neg_binomial_rng(.5, 5, 5)
 5-element Vector{Float64}:
   8.0
@@ -44,13 +41,12 @@ julia> neg_binomial_rng(.5, 5, 5)
   8.0
  13.0
  10.0
-```
 
-```julia-repl
 julia> neg_binomial_rng(.5, 2, (2,2))
 2×2 Matrix{Float64}:
  3.0  4.0
  4.0  2.0
+ 
 ```
 """
 function neg_binomial_rng(p::Real, r::Int, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)

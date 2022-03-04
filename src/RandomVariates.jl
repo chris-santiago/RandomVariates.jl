@@ -13,7 +13,8 @@ neg_binomial_rng,
 normal_rng,
 poisson_rng,
 uniform_rng,
-weibull_rng
+weibull_rng,
+tausworthe_rng
 
 include("uniform.jl")
 include("exponential.jl")
@@ -27,6 +28,7 @@ include("neg_binomial.jl")
 include("normal.jl")
 include("gamma.jl")
 include("beta.jl")
+include("tausworthe.jl")
 
 using Dates
 

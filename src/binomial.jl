@@ -1,7 +1,7 @@
 """
-    binomial_rng(p, n, size=1, seed=nothing)
+    binomial_rng(p, n, size=1; seed=nothing)
 
-Generate a `size` element array of random variables from a Binomial(`p`, `n`) distribution.
+Generate a `size` element array of random variables from a Binomial(`p`, `n`) distribution. Optionally you can set a specific seed.
 
 # Examples
 
@@ -9,9 +9,7 @@ Generate a `size` element array of random variables from a Binomial(`p`, `n`) di
 julia> binomial_rng(.3, 10)
 1×1 Matrix{Int64}:
  3
-```
 
-```julia-repl
 julia> binomial_rng(.3, 10, (2,2))
 2×2×1 Array{Int64, 3}:
 [:, :, 1] =
