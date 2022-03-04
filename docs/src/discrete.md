@@ -23,3 +23,9 @@ RandomVariates.geometric_rng
 ```@docs
 RandomVariates.poisson_rng
 ```
+
+## Negative Binomial
+
+```@docs
+RandomVariates.neg_binomial_rng
+```
