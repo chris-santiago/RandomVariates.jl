@@ -32,3 +32,9 @@ function tausworthe_rng(size::Int; r::Int=3, q::Int=128)
     U = parse.(Int, bit_string, base=2) ./ 2^n_bits
     return U
 end
+
+
+function tausworthe_rng(size::Tuple{Vararg{Int}}; r::Int=3, q::Int=128)
+    U = tausworthe_rng(reduce(*, size), r=r, q=q)
+    return reshape(U, size)
+end
