@@ -1,7 +1,7 @@
 using Random: bitrand
 
 """
-    tausworthe_rng(size::Int; r::Int=3, q::Int=128)
+    tausworthe_rng(size::Int=1; r::Int=3, q::Int=128)
 
 Generate a `size` element array of random variables from a standard Uniform(0,1) distribution using a Tausworthe RNG.
 
@@ -10,12 +10,22 @@ Generate a `size` element array of random variables from a standard Uniform(0,1)
 Implementation:
 
 ``B_i = B_{i-r} \\quad XOR \\quad B_{i-q}``
-"""
-function tausworthe_rng(size::Int; r::Int=3, q::Int=128)
-    if size < q
-        throw(ArgumentError("Size must be > 128"))
-    end
 
+# Examples
+
+```julia-repl
+julia> U = tausworthe_rng(1)
+1-element Vector{Float64}:
+ 0.5462285033427179
+
+ julia> U = tausworthe_rng((2,2))
+2×2 Matrix{Float64}:
+ 0.782613  0.365878
+ 0.176636  0.0413817
+ 
+````
+"""
+function tausworthe_rng(size::Int=1; r::Int=3, q::Int=128)
     n_bits = 32
     size *= n_bits
     seed = bitrand(q)
