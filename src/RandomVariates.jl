@@ -32,6 +32,17 @@ function set_user_seed(seed::Int)
     global SEED = seed * 7856209
 end
 
+"""
+    seed_setter(seed::Union{Int, Nothing}=nothing)
+
+Set a user defined seed, if given.
+"""
+function seed_setter(seed::Union{Int, Nothing}=nothing)
+    if !isnothing(seed)
+        set_user_seed(seed)  # only set user seed once so we get new seed in subsequent calls
+    end
+end
+
 
 """
     get_seed()
@@ -98,9 +109,7 @@ julia> get_std_uniform(5)
 ```
 """
 function get_std_uniform(size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
-    if !isnothing(seed)
-        set_user_seed(seed)
-    end
+    seed_setter(seed)
     U = zeros(size)  # preallocate array
     U .= gen_prn.()  # vectorize assignment for efficiency
     U = U./MOD
@@ -420,8 +429,9 @@ julia> get_std_normal((2,2))
 ```
 """
 function get_std_normal(size::Int=1; seed::Union{Int, Nothing}=nothing)
-    a = sqrt.(-2 .* log.(get_std_uniform(size, seed=seed)))
-    b = 2 * π .* get_std_uniform(size, seed=seed)
+    seed_setter(seed)
+    a = sqrt.(-2 .* log.(get_std_uniform(size)))
+    b = 2 * π .* get_std_uniform(size)
     A = a .* sin.(b)
     B = a .* cos.(b)
     X = collect(Iterators.flatten(zip(A, B)))[1:size]
@@ -471,7 +481,7 @@ end
 """
     get_gamma_prn(α, β, seed=nothing)
 
-Generate a random variable from a Gamma(α, β) distribution.
+Generate a random variable from a Gamma(`α`, `β`) distribution.
 
 # Notes
 
@@ -490,13 +500,14 @@ julia> get_gamma_prn(1, 2)
 ```
 """
 function get_gamma_prn(α::Real, β::Real=1; seed::Union{Int, Nothing}=nothing)
+    seed_setter(seed)
     d = α - (1/3)
     c = 1 / sqrt(9*d)
     while true
-        z = get_std_normal(seed=seed)[1]
+        z = get_std_normal()[1]
         if z > -1/c
             v = (1 + c * z) ^ 3
-            u = get_std_uniform(seed=seed)[1]
+            u = get_std_uniform()[1]
             if log(u) <= (0.5 * z^2 + d - (d * v + d * log(v)))
                 return d * v / β
             end
@@ -508,7 +519,7 @@ end
 """
     gamma_rng(α, β, size=1, seed=nothing)
 
-Generate a `size` element array of random variables from a Gamma(α, β) distribution.
+Generate a `size` element array of random variables from a Gamma(`α`, `β`) distribution.
 
 # Examples
 
@@ -535,20 +546,38 @@ julia> gamma_rng(1,1,(2,2))
 ```
 """
 function gamma_rng(α::Real, β::Real=1, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
+    seed_setter(seed)
     if α < 1
         α += 1
         X = zeros(size)
-        X .= get_gamma_prn.(α, β, seed=seed)
-        U = get_std_uniform(size, seed=seed)
+        X .= get_gamma_prn.(α, β)
+        U = get_std_uniform(size)
         X .*= U.^(1/α)
         return X
     end
     X = zeros(size)
-    X .= get_gamma_prn.(α, β, seed=seed)
+    X .= get_gamma_prn.(α, β)
     return X
 end
 
 
+"""
+    get_neg_binomial_prn(α, β, size=1, seed=nothing)
+
+Generate a random variable from a Negative Binomial(`p`, `r`) distribution.
+
+# Examples
+
+```julia-repl
+julia> get_neg_binomial_prn(.2, 2)
+16
+```
+
+```julia-repl
+julia> get_neg_binomial_prn(.2, 2, seed=42)
+6
+```
+"""
 function get_neg_binomial_prn(p::Real, r::Int; seed::Union{Int, Nothing}=nothing)
     check_p(p)
     U = bernoulli_rng(p, 1000, seed=seed)
@@ -556,7 +585,38 @@ function get_neg_binomial_prn(p::Real, r::Int; seed::Union{Int, Nothing}=nothing
     return X
 end
 
-function neg_binomial_rng(p::Real, r::int, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
+
+"""
+    neg_binomial_rng(α, β, size=1, seed=nothing)
+
+Generate a `size` element array of random variables from a Negative Binomial(`p`, `r`) distribution.
+
+# Examples
+
+```julia-repl
+julia> neg_binomial_rng(.5, 2)
+1-element Vector{Float64}:
+ 3.0
+```
+
+```julia-repl
+julia> neg_binomial_rng(.5, 5, 5)
+5-element Vector{Float64}:
+  8.0
+ 10.0
+  8.0
+ 13.0
+ 10.0
+```
+
+```julia-repl
+julia> neg_binomial_rng(.5, 2, (2,2))
+2×2 Matrix{Float64}:
+ 3.0  4.0
+ 4.0  2.0
+```
+"""
+function neg_binomial_rng(p::Real, r::Int, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
     check_p(p)
     X = zeros(size)
     X .= get_neg_binomial_prn.(p, r, seed=seed)
@@ -564,7 +624,38 @@ function neg_binomial_rng(p::Real, r::int, size::Union{Int, Tuple{Vararg{Int}}}=
 end
 
 
+"""
+    beta_rng(α, β, size=1, seed=nothing)
+
+Generate a `size` element array of random variables from a Beta(`α`, `β`) distribution.
+
+# Examples
+
+```julia-repl
+julia> beta_rng(1,2)
+1-element Vector{Float64}:
+ 0.44456674672905633
+```
+
+```julia-repl
+julia> neg_binomial_rng(.5, 5, 5)
+5-element Vector{Float64}:
+  8.0
+ 10.0
+  8.0
+ 13.0
+ 10.0
+```
+
+```julia-repl
+julia> neg_binomial_rng(.5, 2, (2,2))
+2×2 Matrix{Float64}:
+ 3.0  4.0
+ 4.0  2.0
+```
+"""
 function beta_rng(α::Real, β::Real, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
+    seed_setter(seed)
     Y₁ = gamma_rng(α, 1, size, seed=seed)
     Y₂ = gamma_rng(β, 1, size, seed=seed)
     X = Y₁ ./ (Y₁ .+ Y₂)
