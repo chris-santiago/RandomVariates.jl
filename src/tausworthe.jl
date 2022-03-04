@@ -18,7 +18,7 @@ julia> U = tausworthe_rng(1)
 1-element Vector{Float64}:
  0.5462285033427179
 
- julia> U = tausworthe_rng((2,2))
+julia> U = tausworthe_rng((2,2))
 2×2 Matrix{Float64}:
  0.782613  0.365878
  0.176636  0.0413817
