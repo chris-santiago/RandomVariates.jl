@@ -1,7 +1,7 @@
 """
-    erlang_rng(k, λ, size=1, seed=nothing)
+    erlang_rng(k, λ, size=1; seed=nothing)
 
-Generate a `size` element array of random variables from a Erlang_{`k`}(`λ`) distribution.
+Generate a `size` element array of random variables from a Erlang_{`k`}(`λ`) distribution. Optionally you can set a specific seed.
 
 # Examples
 
@@ -9,9 +9,7 @@ Generate a `size` element array of random variables from a Erlang_{`k`}(`λ`) di
 julia> erlang_rng(5, .5)
 1-element Vector{Float64}:
  10.803989701023117
-```
 
-```julia-repl
 julia> erlang_rng(3, 1, (2,2))
 2×2×1 Array{Float64, 3}:
 [:, :, 1] =

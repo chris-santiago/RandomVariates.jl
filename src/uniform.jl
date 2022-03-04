@@ -18,9 +18,9 @@ end
 
 
 """
-    get_std_uniform(size=1, seed=nothing)
+    get_std_uniform(size=1; seed=nothing)
 
-Generate a `size` element array of random variables from a standard Uniform(0,1) distribution.
+Generate a `size` element array of random variables from a standard Uniform(0,1) distribution. Optionally you can set a specific seed.
 
 # Examples
 
@@ -28,15 +28,11 @@ Generate a `size` element array of random variables from a standard Uniform(0,1)
 julia> get_std_uniform()
 1-element Vector{Float64}:
  0.42443098343863284
-```
 
-```julia-repl
 julia> get_std_uniform(seed=43)
 1-element Vector{Float64}:
  0.09636209187468836
-```
 
-```julia-repl
 julia> get_std_uniform(5)
 5-element Vector{Float64}:
  0.6584669595802204
@@ -44,6 +40,7 @@ julia> get_std_uniform(5)
  0.509019330923099
  0.12156905126458639
  0.917393216014684
+
 ```
 """
 function get_std_uniform(size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
@@ -56,9 +53,9 @@ end
 
 
 """
-    uniform_rng(a, b, size=1, seed=nothing)
+    uniform_rng(a, b, size=1; seed=nothing)
 
-Generate a `size` element array of random variables from a Uniform(`a`, `b`) distribution.
+Generate a `size` element array of random variables from a Uniform(`a`, `b`) distribution. Optionally you can set a specific seed.
 
 # Examples
 
@@ -66,21 +63,18 @@ Generate a `size` element array of random variables from a Uniform(`a`, `b`) dis
 julia> uniform_rng(1, 6)
 1-element Vector{Float64}:
  2.638331960912094
-```
 
-```julia-repl
 julia> uniform_rng(1, 6, seed=42)
 1-element Vector{Float64}:
  2.6333962626438314
-```
 
-```julia-repl
 julia> uniform_rng(0, 1, (4,4))
 4×4 Matrix{Float64}:
  0.640603   0.757195  0.325722  0.645452
  0.955188   0.155203  0.953206  0.0046541
  0.0923526  0.490721  0.451705  0.516445
  0.661619   0.527063  0.212847  0.832298
+ 
 ```
 """
 function uniform_rng(a::Real=0, b::Real=1, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)

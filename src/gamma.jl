@@ -1,7 +1,7 @@
 """
-    get_gamma_prn(α, β, seed=nothing)
+    get_gamma_prn(α, β; seed=nothing)
 
-Generate a random variable from a Gamma(`α`, `β`) distribution.
+Generate a random variable from a Gamma(`α`, `β`) distribution. Optionally you can set a specific seed.
 
 # Notes
 
@@ -11,12 +11,10 @@ This method cannot handle values of α < 1. Users should use [`gamma_rng`](@ref)
 
 ```julia-repl
 julia> get_gamma_prn(1)
-0.11697493392617847
-```
+ 0.11697493392617847
 
-```julia-repl
 julia> get_gamma_prn(1, 2)
-0.09261426424752814
+ 0.09261426424752814
 ```
 """
 function get_gamma_prn(α::Real, β::Real=1; seed::Union{Int, Nothing}=nothing)
@@ -37,9 +35,9 @@ end
 
 
 """
-    gamma_rng(α, β, size=1, seed=nothing)
+    gamma_rng(α, β, size=1; seed=nothing)
 
-Generate a `size` element array of random variables from a Gamma(`α`, `β`) distribution.
+Generate a `size` element array of random variables from a Gamma(`α`, `β`) distribution. Optionally you can set a specific seed.
 
 # Examples
 
@@ -47,22 +45,19 @@ Generate a `size` element array of random variables from a Gamma(`α`, `β`) dis
 julia> gamma_rng(1,1)
 1-element Vector{Float64}:
  0.5190236735858542
-```
 
-```julia-repl
 julia> gamma_rng(1,1,4)
 4-element Vector{Float64}:
  0.3035517926878862
  0.5765419737109622
  0.44121996206333797
  0.7325887616559309
-```
 
-```julia-repl
 julia> gamma_rng(1,1,(2,2))
 2×2 Matrix{Float64}:
  0.228818  0.88849
  0.665729  1.01668
+ 
 ```
 """
 function gamma_rng(α::Real, β::Real=1, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)

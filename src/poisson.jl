@@ -1,7 +1,7 @@
 """
-    poisson_rng(p, n, size=1, seed=nothing)
+    poisson_rng(p, n, size=1; seed=nothing)
 
-Generate a `size` element array of random variables from a Poisson(`λ`) distribution.
+Generate a `size` element array of random variables from a Poisson(`λ`) distribution. Optionally you can set a specific seed.
 
 # Examples
 
@@ -9,9 +9,7 @@ Generate a `size` element array of random variables from a Poisson(`λ`) distrib
 julia> poisson_rng(3)
 1×1 Matrix{Int64}:
  7
-```
 
-```julia-repl
 julia> poisson_rng(10, 5)
 5×1 Matrix{Int64}:
  13
@@ -19,9 +17,7 @@ julia> poisson_rng(10, 5)
  10
   8
  15
-```
 
-```julia-repl
 julia> poisson_rng(10, (5,5))
 5×5×1 Array{Int64, 3}:
 [:, :, 1] =
@@ -30,6 +26,7 @@ julia> poisson_rng(10, (5,5))
  11  12   4  10   6
   7   9  13  11   7
  13   7  10  10  14
+ 
 ```
 """
 function poisson_rng(λ::Real, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
