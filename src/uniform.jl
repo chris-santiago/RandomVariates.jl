@@ -17,7 +17,7 @@ julia> gen_prn()
 
 julia> gen_prn()
  63914890472862
-````
+```
 """
 function gen_prn()
     seed = get_seed()

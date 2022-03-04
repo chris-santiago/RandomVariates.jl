@@ -22,8 +22,8 @@ julia> U = tausworthe_rng(1)
 2×2 Matrix{Float64}:
  0.782613  0.365878
  0.176636  0.0413817
- 
-````
+
+```
 """
 function tausworthe_rng(size::Int=1; r::Int=3, q::Int=128)
     n_bits = 32
