@@ -1,6 +1,16 @@
 using Random: bitrand
 
+"""
+    tausworthe_rng(size::Int; r::Int=3, q::Int=128)
 
+Generate a `size` element array of random variables from a standard Uniform(0,1) distribution using a Tausworthe RNG.
+
+# Notes
+
+Implementation:
+
+``B_i = B_{i-r} \\quad XOR \\quad B_{i-q}``
+"""
 function tausworthe_rng(size::Int; r::Int=3, q::Int=128)
     if size < q
         throw(ArgumentError("Size must be > 128"))
