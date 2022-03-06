@@ -24,6 +24,12 @@ julia> U = tausworthe_rng((2,2))
  0.176636  0.0413817
 
 ```
+
+# References
+
+Shu Tezuka and Pierre L'Ecuyer. 1991. Efficient and portable combined Tausworthe random number generators. ACM Trans. Model. Comput. Simul. 1, 2 (April 1991), 99–112. DOI:https://doi.org/10.1145/116890.116892
+
+Law, A. Simulation modeling and analysis, 5th Ed. McGraw Hill Education, Tuscon, 2013.
 """
 function tausworthe_rng(size::Int=1; r::Int=3, q::Int=128)
     n_bits = 32

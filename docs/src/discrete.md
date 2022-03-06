@@ -28,4 +28,5 @@ RandomVariates.poisson_rng
 
 ```@docs
 RandomVariates.neg_binomial_rng
+RandomVariates.conv_neg_binomial_rng
 ```

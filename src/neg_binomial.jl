@@ -83,7 +83,7 @@ The Negative Binomial distribution is given:
 
 ``f(x,p,r) = \\binom{x-1}{r-1} (1-p)^{x-r} p^r \\quad x = 0,1,\\dots, n``
 
-Uses a convolution algorithm to generate random variables, which is slightly slower than `neg_binomial_rng`(@ref).
+Uses a convolution algorithm to generate random variables, which is slightly slower than [`neg_binomial_rng`](@ref).
 
 # Examples
 

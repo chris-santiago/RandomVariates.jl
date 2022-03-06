@@ -70,3 +70,10 @@ function normal_rng(μ::Real=0, σ²::Real=1, size::Union{Int, Tuple{Vararg{Int}
     X = get_std_normal(size, seed=seed) .* σ² .+ μ
     return X
 end
+
+# NOT DOCUMENTED, NOT EXPORTED!
+function lognormal_rng(μ::Real=0, σ²::Real=1, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
+    Y = normal_rng(μ, σ², size, seed=seed)
+    X = exp.(Y)
+    return X
+end
