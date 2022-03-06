@@ -1,4 +1,7 @@
-# RandomVariates
+<h1>
+<img src="docs/src/assets/logo.png" width=40>
+Random Variates
+</h1>
 
 A collection of random variate generators, froms scratch. 
 
