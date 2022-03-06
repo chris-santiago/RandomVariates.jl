@@ -12,7 +12,7 @@ There's nothing novel, here; I completed this project mostly for some hands-on p
 Clone this repo:
 
 ```bash
-git clone https://github.com/chris-santiago/RandomVariates.jl
+git clone https://github.com/chris-santiago/RandomVariates.jl.git
 cd RandomVariates
 ```
 
