@@ -9,6 +9,10 @@ The pdf of an Exponential(λ) distribution is given as:
 
 ``f(x, λ) = λe^{-λx} \\quad x ≥ 0``
 
+!!! note
+    Some Exponential distributions are parameterized by ``β = \\frac{1}{λ}``, where λ is the number of events in an interval. 
+    In such cases, β represents the mean interarrival time; here we use λ to represent mean arrival rate per unit of time.
+
 # Examples
 
 ```julia-repl

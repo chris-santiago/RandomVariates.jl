@@ -37,6 +37,8 @@ julia> neg_binomial_rng(.5, 2, (2,2))
 
 D.P. Kroese, T. Taimre, Z.I. Botev. Handbook of Monte Carlo Methods. 
   Wiley Series in Probability and Statistics, John Wiley & Sons, New York, 2011.
+
+Law, A. Simulation modeling and analysis, 5th Ed. McGraw Hill Education, Tuscon, 2013.
 """
 function beta_rng(α::Real, β::Real, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
     seed_setter(seed)

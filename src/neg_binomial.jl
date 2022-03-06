@@ -20,7 +20,8 @@ Walk, C. Handbook on statistical distributions for experimentalists. 2007.
 """
 function get_neg_binomial_prn(p::Real, r::Int; seed::Union{Int, Nothing}=nothing)
     check_p(p)
-    U = bernoulli_rng(p, 1000, seed=seed)
+    n = convert(Int, r/p * 10)
+    U = bernoulli_rng(p, n, seed=seed)
     X = sum(cumsum(U, dims=1) .< r) + 1   # TODO CHECK THIS AGAINST ANOTHER METHOD (e.g. convolution)
     return X
 end
@@ -78,11 +79,11 @@ Generate a `size` element array of random variables from a Negative Binomial(`p`
 
 # Notes
 
-Uses a convolution algorithm to generate random variables.
-
 The Negative Binomial distribution is given:
 
 ``f(x,p,r) = \\binom{x-1}{r-1} (1-p)^{x-r} p^r \\quad x = 0,1,\\dots, n``
+
+Uses a convolution algorithm to generate random variables, which is slightly slower than `neg_binomial_rng`(@ref).
 
 # Examples
 
