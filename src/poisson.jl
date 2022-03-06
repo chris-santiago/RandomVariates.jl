@@ -3,6 +3,12 @@
 
 Generate a `size` element array of random variables from a Poisson(`λ`) distribution. Optionally you can set a specific seed.
 
+# Notes
+
+The Poisson distribution is given by:
+
+``f(x, λ) = \\frac{λ^x}{x!} e^λ \\quad x = 0,1,2,…``
+
 # Examples
 
 ```julia-repl
@@ -28,6 +34,12 @@ julia> poisson_rng(10, (5,5))
  13   7  10  10  14
  
 ```
+
+# References
+
+R. Larson, A. Odoni. Urban operations research. Prentice-Hall, New Jersey, 1981.
+
+G. Last, M. Penrose. Lectures on the poisson process. Cambridge University Press, 2017.
 """
 function poisson_rng(λ::Real, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
     n = ceil(Int, λ*1e2)  # ensure n is integer

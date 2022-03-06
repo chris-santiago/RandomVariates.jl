@@ -67,6 +67,12 @@ end
 
 Generate a `size` element array of random variables from a Uniform(`a`, `b`) distribution. Optionally you can set a specific seed.
 
+# Notes
+
+The Uniform distribution is given by:
+
+``f(x, a, b) = \\frac{``}{b-a} \\quad for a ≤ x ≤ ≤ b``
+
 # Examples
 
 ```julia-repl
@@ -86,6 +92,10 @@ julia> uniform_rng(0, 1, (4,4))
  0.661619   0.527063  0.212847  0.832298
  
 ```
+
+# References
+
+Walk, C. Handbook on statistical distributions for experimentalists. 2007.
 """
 function uniform_rng(a::Real=0, b::Real=1, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
     U = get_std_uniform(size, seed=seed)

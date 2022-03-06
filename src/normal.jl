@@ -47,6 +47,12 @@ end
 
 Generate a `size` element array of random variables from a Normal(`μ`, `σ²`) distribution. Optionally you can set a specific seed.
 
+# Notes
+
+The Normal distribution is given by:
+
+``f(x, μ, σ²) = \\frac{1}{{σ\\sqrt{2π}} e^{ - \\frac{1}{2} (\\frac{x-μ}{σ})^2}``
+
 # Examples
 
 ```julia-repl
@@ -65,6 +71,10 @@ julia> normal_rng(0,1,(2,2))
  -0.0556832  0.714122
  
 ```
+
+# References
+
+Walk, C. Handbook on statistical distributions for experimentalists. 2007.
 """
 function normal_rng(μ::Real=0, σ²::Real=1, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
     X = get_std_normal(size, seed=seed) .* σ² .+ μ
