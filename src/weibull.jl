@@ -7,7 +7,7 @@ Generate a `size` element array of random variables from a Weibull(`λ`, `β`) d
 
 The pdf of an Weibull(λ, β) distribution is given as:
 
-``f(x, λ, β) = λe^{-λx}^β \\quad x ≥ 0``
+``f(x, λ, β) = λ e^{-λx^β} \\quad x ≥ 0``
 
 # Examples
 

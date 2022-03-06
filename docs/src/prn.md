@@ -1,13 +1,5 @@
 # Pseudorandom Numbers
 
-## Setting an Initial Seed
-
-```@docs
-RandomVariates.set_seed
-RandomVariates.get_seed
-RandomVariates.set_user_seed
-```
-
 ## Using a Linear Congruential Generator
 
 ```@docs

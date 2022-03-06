@@ -51,7 +51,7 @@ Generate a `size` element array of random variables from a Normal(`μ`, `σ²`) 
 
 The Normal distribution is given by:
 
-``f(x, μ, σ²) = \\frac{1}{{σ\\sqrt{2π}} e^{ - \\frac{1}{2} (\\frac{x-μ}{σ})^2}``
+``f(x, μ, σ²) = \\frac{1}{σ\\sqrt{2π}} e^{ - \\frac{1}{2} (\\frac{x-μ}{σ})^2}``
 
 # Examples
 

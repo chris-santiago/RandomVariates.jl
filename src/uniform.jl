@@ -71,7 +71,7 @@ Generate a `size` element array of random variables from a Uniform(`a`, `b`) dis
 
 The Uniform distribution is given by:
 
-``f(x, a, b) = \\frac{``}{b-a} \\quad for a ≤ x ≤ ≤ b``
+``f(x, a, b) = \\frac{1}{b-a} \\quad \\text{for} \\quad a ≤ x ≤ b``
 
 # Examples
 
