@@ -3,7 +3,7 @@
 Random Variates
 </h1>
 
-A collection of random variate generators, froms scratch. 
+A collection of random variate generators, from scratch. 
 
 There's nothing novel, here; I completed this project mostly for some hands-on practice with Julia.
 
