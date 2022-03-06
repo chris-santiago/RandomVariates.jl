@@ -3,6 +3,12 @@
 
 Generate a `size` element array of random variables from a Exponential(`λ`) distribution. Optionally you can set a specific seed.
 
+# Notes
+
+The pdf of an Exponential(λ) distribution is given as:
+
+``f(x, λ) = λe^{-λx} \\quad x ≥ 0``
+
 # Examples
 
 ```julia-repl
@@ -19,6 +25,11 @@ julia> expon_rng(1.2, (2, 2))
  1.9327    0.134739
  0.746861  0.155614
 ```
+
+# References
+
+D.P. Kroese, T. Taimre, Z.I. Botev. Handbook of Monte Carlo Methods. 
+  Wiley Series in Probability and Statistics, John Wiley & Sons, New York, 2011.
 """
 function expon_rng(λ::Real, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
     U = get_std_uniform(size, seed=seed)

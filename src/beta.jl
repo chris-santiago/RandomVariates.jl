@@ -3,6 +3,14 @@
 
 Generate a `size` element array of random variables from a Beta(`α`, `β`) distribution. Optionally you can set a specific seed.
 
+# Notes
+
+The Beta distribution is given:
+
+``f(x,α,β) = \\frac{x^{α-1 (1-x)^{β-1}}}{Β(α,β)} \\quad x \\in [0,1]``
+
+where ``Β(α,β) = \\frac{Γ(α)Γ(β)}{Γ(α+β)}``
+
 # Examples
 
 ```julia-repl
@@ -24,6 +32,11 @@ julia> neg_binomial_rng(.5, 2, (2,2))
  4.0  2.0
  
 ```
+
+# References
+
+D.P. Kroese, T. Taimre, Z.I. Botev. Handbook of Monte Carlo Methods. 
+  Wiley Series in Probability and Statistics, John Wiley & Sons, New York, 2011.
 """
 function beta_rng(α::Real, β::Real, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
     seed_setter(seed)

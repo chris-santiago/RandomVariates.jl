@@ -3,6 +3,12 @@
 
 Generate a `size` element array of random variables from a Bernoulli(`p`) distribution. Optionally you can set a specific seed.
 
+# Notes
+
+The pdf of the Bernoulli Distribution is given:
+
+``f(x, p) = p^x (1-p)^{1-x} \\quad x \\in [0,1]``
+
 # Examples
 
 ```julia-repl
@@ -23,10 +29,15 @@ julia> bernoulli_rng(.8, (2,2), seed=42)
  1  0
  0  1
 ```
+
+# References
+
+D.P. Kroese, T. Taimre, Z.I. Botev. Handbook of Monte Carlo Methods. 
+  Wiley Series in Probability and Statistics, John Wiley & Sons, New York, 2011.
 """
 function bernoulli_rng(p::Real, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
     check_p(p)
     U = get_std_uniform(size, seed=seed)
-    X = (1 - p) .<= U
+    X = U .< p
     return X
 end
