@@ -38,6 +38,6 @@ D.P. Kroese, T. Taimre, Z.I. Botev. Handbook of Monte Carlo Methods.
 function bernoulli_rng(p::Real, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
     check_p(p)
     U = get_std_uniform(size, seed=seed)
-    X = U .< p
+    X = U .<= p
     return X
 end

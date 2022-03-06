@@ -16,6 +16,11 @@ julia> get_gamma_prn(1)
 julia> get_gamma_prn(1, 2)
  0.09261426424752814
 ```
+
+# References
+
+D.P. Kroese, T. Taimre, Z.I. Botev. Handbook of Monte Carlo Methods. 
+  Wiley Series in Probability and Statistics, John Wiley & Sons, New York, 2011.
 """
 function get_gamma_prn(α::Real, β::Real=1; seed::Union{Int, Nothing}=nothing)
     seed_setter(seed)
@@ -39,6 +44,12 @@ end
 
 Generate a `size` element array of random variables from a Gamma(`α`, `β`) distribution. Optionally you can set a specific seed.
 
+# Notes
+
+The Gamma distribution is given:
+
+``f(x,α,β) = \\frac{β^α x^{α-1} e^{-βx}}{Γ(α)} \\quad x ≥ 0``
+
 # Examples
 
 ```julia-repl
@@ -59,6 +70,11 @@ julia> gamma_rng(1,1,(2,2))
  0.665729  1.01668
  
 ```
+
+# References
+
+D.P. Kroese, T. Taimre, Z.I. Botev. Handbook of Monte Carlo Methods. 
+  Wiley Series in Probability and Statistics, John Wiley & Sons, New York, 2011.
 """
 function gamma_rng(α::Real, β::Real=1, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
     seed_setter(seed)
