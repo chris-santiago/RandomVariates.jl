@@ -77,7 +77,8 @@ julia> normal_rng(0,1,(2,2))
 Walk, C. Handbook on statistical distributions for experimentalists. 2007.
 """
 function normal_rng(μ::Real=0, σ²::Real=1, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
-    X = get_std_normal(size, seed=seed) .* σ² .+ μ
+    σ = sqrt(σ²)
+    X = get_std_normal(size, seed=seed) .* σ .+ μ
     return X
 end
 
