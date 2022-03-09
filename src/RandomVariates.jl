@@ -16,7 +16,8 @@ mv_normal_rng,
 poisson_rng,
 uniform_rng,
 weibull_rng,
-tausworthe_rng
+tausworthe_rng,
+triag_rng
 
 include("uniform.jl")
 include("exponential.jl")
@@ -31,6 +32,7 @@ include("normal.jl")
 include("gamma.jl")
 include("beta.jl")
 include("tausworthe.jl")
+include("triangular.jl")
 
 using Dates
 

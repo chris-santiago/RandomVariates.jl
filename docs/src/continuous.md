@@ -29,3 +29,9 @@ RandomVariates.gamma_rng
 ```@docs
 RandomVariates.beta_rng
 ```
+
+## Triangular
+
+```@docs
+RandomVariates.triag_rng
+```
