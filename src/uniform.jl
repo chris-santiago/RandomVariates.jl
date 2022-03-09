@@ -28,9 +28,9 @@ end
 
 
 """
-    get_std_uniform(size=1; seed=nothing)
+    get_std_uniform(shape=1; seed=nothing)
 
-Generate a `size` element array of random variables from a standard Uniform(0,1) distribution. Optionally you can set a specific seed.
+Generate a `shape` element array of random variables from a standard Uniform(0,1) distribution. Optionally you can set a specific seed.
 
 # Examples
 
@@ -53,9 +53,9 @@ julia> get_std_uniform(5)
 
 ```
 """
-function get_std_uniform(size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
+function get_std_uniform(shape::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
     seed_setter(seed)
-    U = zeros(size)  # preallocate array
+    U = zeros(shape)  # preallocate array
     U .= gen_prn.()  # vectorize assignment for efficiency
     U = U./MOD
 	return U
@@ -63,9 +63,9 @@ end
 
 
 """
-    uniform_rng(a, b, size=1; seed=nothing)
+    uniform_rng(a, b, shape=1; seed=nothing)
 
-Generate a `size` element array of random variables from a Uniform(`a`, `b`) distribution. Optionally you can set a specific seed.
+Generate a `shape` element array of random variables from a Uniform(`a`, `b`) distribution. Optionally you can set a specific seed.
 
 # Notes
 
@@ -97,8 +97,8 @@ julia> uniform_rng(0, 1, (4,4))
 
 Walk, C. Handbook on statistical distributions for experimentalists. 2007.
 """
-function uniform_rng(a::Real=0, b::Real=1, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
-    U = get_std_uniform(size, seed=seed)
+function uniform_rng(a::Real=0, b::Real=1, shape::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
+    U = get_std_uniform(shape, seed=seed)
     X = a .+ (b-a) .* U
     return X
 end

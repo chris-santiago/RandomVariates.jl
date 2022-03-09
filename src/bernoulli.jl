@@ -1,7 +1,7 @@
 """
-    bernoulli_rng(p, size=1; seed=nothing)
+    bernoulli_rng(p, shape=1; seed=nothing)
 
-Generate a `size` element array of random variables from a Bernoulli(`p`) distribution. Optionally you can set a specific seed.
+Generate a `shape` element array of random variables from a Bernoulli(`p`) distribution. Optionally you can set a specific seed.
 
 # Notes
 
@@ -35,9 +35,9 @@ julia> bernoulli_rng(.8, (2,2), seed=42)
 D.P. Kroese, T. Taimre, Z.I. Botev. Handbook of Monte Carlo Methods. 
   Wiley Series in Probability and Statistics, John Wiley & Sons, New York, 2011.
 """
-function bernoulli_rng(p::Real, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
+function bernoulli_rng(p::Real, shape::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
     check_p(p)
-    U = get_std_uniform(size, seed=seed)
+    U = get_std_uniform(shape, seed=seed)
     X = U .<= p
     return X
 end

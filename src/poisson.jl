@@ -1,7 +1,7 @@
 """
-    poisson_rng(p, n, size=1; seed=nothing)
+    poisson_rng(p, n, shape=1; seed=nothing)
 
-Generate a `size` element array of random variables from a Poisson(`λ`) distribution. Optionally you can set a specific seed.
+Generate a `shape` element array of random variables from a Poisson(`λ`) distribution. Optionally you can set a specific seed.
 
 # Notes
 
@@ -41,10 +41,9 @@ R. Larson, A. Odoni. Urban operations research. Prentice-Hall, New Jersey, 1981.
 
 G. Last, M. Penrose. Lectures on the poisson process. Cambridge University Press, 2017.
 """
-function poisson_rng(λ::Real, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
+function poisson_rng(λ::Real, shape::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
     n = ceil(Int, λ*1e2)  # ensure n is integer
-    U = expon_rng(λ, (size..., n), seed=seed)
-    # X = sum(cumsum(U, dims=ndims(U)) .< 1, dims=length(size))
+    U = expon_rng(λ, (shape..., n), seed=seed)
     X = sum(cumsum(U, dims=ndims(U)) .< 1, dims=ndims(U))
     return X
 end

@@ -40,9 +40,9 @@ end
 
 
 """
-    gamma_rng(α, β, size=1; seed=nothing)
+    gamma_rng(α, β, shape=1; seed=nothing)
 
-Generate a `size` element array of random variables from a Gamma(`α`, `β`) distribution. Optionally you can set a specific seed.
+Generate a `shape` element array of random variables from a Gamma(`α`, `β`) distribution. Optionally you can set a specific seed.
 
 # Notes
 
@@ -76,17 +76,17 @@ julia> gamma_rng(1,1,(2,2))
 D.P. Kroese, T. Taimre, Z.I. Botev. Handbook of Monte Carlo Methods. 
   Wiley Series in Probability and Statistics, John Wiley & Sons, New York, 2011.
 """
-function gamma_rng(α::Real, β::Real=1, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
+function gamma_rng(α::Real, β::Real=1, shape::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
     seed_setter(seed)
     if α < 1
         α += 1
-        X = zeros(size)
+        X = zeros(shape)
         X .= get_gamma_prn.(α, β)
-        U = get_std_uniform(size)
+        U = get_std_uniform(shape)
         X .*= U.^(1/α)
         return X
     end
-    X = zeros(size)
+    X = zeros(shape)
     X .= get_gamma_prn.(α, β)
     return X
 end

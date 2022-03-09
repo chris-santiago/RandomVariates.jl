@@ -1,7 +1,7 @@
 """
-    expon_rng(λ, size=1; seed=nothing)
+    expon_rng(λ, shape=1; seed=nothing)
 
-Generate a `size` element array of random variables from a Exponential(`λ`) distribution. Optionally you can set a specific seed.
+Generate a `shape` element array of random variables from a Exponential(`λ`) distribution. Optionally you can set a specific seed.
 
 # Notes
 
@@ -35,8 +35,8 @@ julia> expon_rng(1.2, (2, 2))
 D.P. Kroese, T. Taimre, Z.I. Botev. Handbook of Monte Carlo Methods. 
   Wiley Series in Probability and Statistics, John Wiley & Sons, New York, 2011.
 """
-function expon_rng(λ::Real, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
-    U = get_std_uniform(size, seed=seed)
+function expon_rng(λ::Real, shape::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
+    U = get_std_uniform(shape, seed=seed)
     X = (-1/λ) .* log.(1 .- U)  # could also use just U
     return X
 end
