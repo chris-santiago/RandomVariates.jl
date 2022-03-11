@@ -42,8 +42,9 @@ C. Alexopoulos, D. Goldsman. Random variate generation. 2020.
 """
 function geometric_rng(p::Real, shape::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
     check_p(p)
-    c = 1 - p
+    c = log(1 - p)
     U = get_std_uniform(shape, seed=seed)
-    X = ceil.(Int, log.(1 .- U) ./ log(c))
+    X = zeros(Int, shape)
+    X = floor.(Int, log.(U) ./ c)  # here sub U for 1-U is fine
     return X
 end
