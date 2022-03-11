@@ -50,5 +50,5 @@ for d in [bernoulli, binomial, geom, neg_binom, poisson]
 end
 
 
-out = plot(x=mv_norm.x[:, 1], y=mv_norm.x[:, 2], Geom.density2d(levels=10), Geom.point, alpha=[0.4])
+out = plot(x=mv_norm.x[:, 1], y=mv_norm.x[:, 2], Geom.density2d(levels=10), Geom.point, alpha=[0.4], Guide.title(mv_norm.title))
 out |> SVG("images/$(mv_norm.title).svg", 4inch, 4inch)
