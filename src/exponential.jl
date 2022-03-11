@@ -37,6 +37,7 @@ D.P. Kroese, T. Taimre, Z.I. Botev. Handbook of Monte Carlo Methods.
 """
 function expon_rng(λ::Real, shape::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
     U = get_std_uniform(shape, seed=seed)
+    X = zeros(shape)
     X = (-1/λ) .* log.(1 .- U)  # could also use just U
     return X
 end
