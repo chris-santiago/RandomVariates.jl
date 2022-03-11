@@ -18,19 +18,11 @@ julia> beta_rng(1,2)
 1-element Vector{Float64}:
  0.44456674672905633
 
-julia> neg_binomial_rng(.5, 5, 5)
-5-element Vector{Float64}:
-  8.0
- 10.0
-  8.0
- 13.0
- 10.0
-
-julia> neg_binomial_rng(.5, 2, (2,2))
+julia> beta_rng(1, 2, (2,2))
 2×2 Matrix{Float64}:
- 3.0  4.0
- 4.0  2.0
- 
+ 0.0792132  0.595657
+ 0.737615   0.649721
+
 ```
 
 # References
