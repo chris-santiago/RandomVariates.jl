@@ -42,7 +42,7 @@ R. Larson, A. Odoni. Urban operations research. Prentice-Hall, New Jersey, 1981.
 G. Last, M. Penrose. Lectures on the poisson process. Cambridge University Press, 2017.
 """
 function poisson_rng(λ::Real, shape::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
-    n = ceil(Int, λ*1e2)  # ensure n is integer
+    n = ceil(Int, λ*5)  # ensure n is integer
     U = expon_rng(λ, (shape..., n), seed=seed)
     X = sum(cumsum(U, dims=ndims(U)) .< 1, dims=ndims(U))
     return X

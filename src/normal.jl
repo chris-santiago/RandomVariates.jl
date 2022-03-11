@@ -181,7 +181,7 @@ Law, A. Simulation modeling and analysis, 5th Ed. McGraw Hill Education, Tuscon,
 """
 function mv_normal_rng(μ::Array, Σ::Matrix, shape::Int=1; seed=nothing)
     X = zeros(shape, length(μ))
-    for i in 1:shape(X, 1)
+    for i in 1:size(X, 1)
         X[i, :] += transpose(get_mv_std_normal(μ, Σ; seed=seed))
     end
     return X
