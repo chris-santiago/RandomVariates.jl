@@ -37,6 +37,7 @@ Law, A. Simulation modeling and analysis, 5th Ed. McGraw Hill Education, Tuscon,
 function gamma_rng(α::Real, β::Real=1, shape::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
     seed_setter(seed)
     X = β .* get_gamma_rv(α, shape)
+    return X
 end
 
 
