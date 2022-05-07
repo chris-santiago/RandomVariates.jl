@@ -73,7 +73,7 @@ end
 
 
 """
-    neg_binomial_rng(p, r, shape=1; seed=nothing)
+    conv_neg_binomial_rng(p, r, shape=1; seed=nothing)
 
 Generate a `shape` element array of random variables from a Negative Binomial(`p`, `r`) distribution. Optionally you can set a specific seed.
 
