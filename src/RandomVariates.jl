@@ -1,10 +1,43 @@
 module RandomVariates
 
-export SEED, A, MOD, uniform_rng, expon_rng, erlang_rng, bernoulli_rng, binomial_rng, poisson_rng, normal_rng
+export
+# SEED, A, C, MOD,
+bernoulli_rng,
+beta_rng,
+binomial_rng,
+erlang_rng,
+expon_rng,
+gamma_rng,
+geometric_rng,
+neg_binomial_rng,
+conv_neg_binomial_rng,
+normal_rng,
+lognormal_rng,
+mv_normal_rng,
+poisson_rng,
+uniform_rng,
+weibull_rng,
+tausworthe_rng,
+triag_rng
+
+include("uniform.jl")
+include("exponential.jl")
+include("erlang.jl")
+include("weibull.jl")
+include("bernoulli.jl")
+include("geometric.jl")
+include("poisson.jl")
+include("binomial.jl")
+include("neg_binomial.jl")
+include("normal.jl")
+include("gamma.jl")
+include("beta.jl")
+include("tausworthe.jl")
+include("triangular.jl")
 
 using Dates
 
-SEED = Dates.value(Dates.now())  # Use current epoch time as default seed
+global SEED = Dates.value(Dates.now())  # Use current epoch time as default seed
 
 # using POSIX params for LCG
 # https://en.wikipedia.org/wiki/Linear_congruential_generator#Parameters_in_common_use
@@ -12,163 +45,57 @@ const A = 25214903917
 const C = 11
 const MOD = 2^48
 
+"""
+    set_seed(seed::Int)
 
+Set the global `SEED` variable.
+"""
 function set_seed(seed::Int)
     global SEED = seed
 end
 
 
+"""
+    set_user_seed(seed::Int)
+
+Set a user-defined seed as global `SEED` variable.
+"""
 function set_user_seed(seed::Int)
     global SEED = seed * 7856209
 end
 
+"""
+    seed_setter(seed::Union{Int, Nothing}=nothing)
 
+Set a user defined seed, if given.
+"""
+function seed_setter(seed::Union{Int, Nothing}=nothing)
+    if !isnothing(seed)
+        set_user_seed(seed)  # only set user seed once so we get new seed in subsequent calls
+    end
+end
+
+
+"""
+    get_seed()
+
+Get the global `SEED` variable.
+"""
 function get_seed()
 	return SEED
 end
 
 
-function gen_prn()
-    seed = get_seed()
-	prn = mod(A * seed + C, MOD)
-    set_seed(prn)
-    return prn
-end
-
-
-function get_std_uniform(size=1; seed=nothing)
-    if !isnothing(seed)
-        set_user_seed(seed)
-    end
-    U = zeros(size)  # preallocate array
-    U .= gen_prn.()  # vectorize assignment for efficiency
-    U = U./MOD
-	return U
-end
-
-
-function uniform_rng(a, b, size=1; seed=nothing)
-    U = get_std_uniform(size, seed=seed)
-    X = a .+ (b-a) .* U
-    return X
-end
-
-
-function expon_rng(λ, size=1; seed=nothing)
-    U = get_std_uniform(size, seed=seed)
-    X = (-1/λ) .* log.(1 .- U)  # could also use just U
-    return X
-end
-
-
-function erlang_rng(k, λ, size=1; seed=nothing)
-    U = zeros(k, size)
-    for i in 1:k
-        U[i, :] = get_std_uniform(size, seed=seed)
-    end
-    # X = (-λ/k) .* log.(prod(U, dims=1))
-    X = (-1/λ) .* log.(prod(U, dims=1))  # Here (-1/λ) represents mean
-    return X
-end
-
-
-function weibull_rng(λ, β, size=1; seed=nothing)
-    U = get_std_uniform(size, seed=seed)
-    X = (1/λ) .* (-log.(1 .- U)) .^ (1/β)
-    return X
-end
-
-
-function bernoulli_rng(p, size=1; seed=nothing)
-    U = get_std_uniform(size, seed=seed)
-    X = (1 - p) .<= U
-    return X
-end
-
-
-function geometric_rng(p, size=1; seed=nothing)
-    U = get_std_uniform(size, seed=seed)
-    X = ceil.(Int, log.(1 .- U) ./ log(1 - p))
-    return X
-end
-
-
-function binomial_rng(p, n, size=1; seed=nothing)
-    U = zeros(Int, size, n)
-    for i in 1:size
-        U[i, :] = bernoulli_rng(p, n, seed=seed)
-    end
-    X = sum(U, dims=2)
-    return X
-end
-
-
-function poisson_rng(λ, size=1; seed=nothing)
-    X = zeros(Int, size)
-    for i in 1:size
-        X[i] = sum(cumsum(expon_rng(λ, λ*1e2, seed=seed)) .< 1)
-    end
-    return X
-end
-
-
-function get_std_normal(size=1; seed=nothing)
-    a = sqrt.(-2 .* log.(get_std_uniform(size, seed=seed)))
-    b = 2 * π .* get_std_uniform(size, seed=seed)
-    A = a .* sin.(b)
-    B = a .* cos.(b)
-    X = collect(Iterators.flatten(zip(A, B)))[1:size]
-    return X
-end
-
-
-function normal_rng(μ=0, σ²=1, size=1; seed=nothing)
-    X = get_std_normal(size, seed=seed) .* σ² .+ μ
-    return X
-end
-
-
-function get_gamma_prn(α, β=1; seed=nothing)  # slow
-    if α < 1
-        u = get_std_uniform(seed=seed)[1]
-        x = get_gamma_prn(α+1, β)
-        x *= u^(1/α)
-        return x
-    end
-    d = α - (1/3)
-    c = 1 / sqrt(9*d)
-    z = get_std_normal(seed=seed)[1]
-    while true
-        v = 0
-        while v <= 0
-            v = (1 + c * z) ^ 3
-        end
-        u = get_std_uniform(seed=seed)[1]
-        if u < 1 - 0.331 * z^4
-            return d * v / β
-        end
-        if log(u) < 0.5 * z^2 + d * (1 - v + log(v))
-            return d * v / β
-        end
+"""
+    check_p(p::Real)
+Check that parameter `p` falls between 0 and 1.
+"""
+function check_p(p::Real)
+    if (p > 1) || (p < 0)
+        throw(ArgumentError("Parameter `p` must fall between 0 and 1."))
     end
 end
 
-
-function gamma_rng(α, β=1, size=1; seed=nothing)
-    X = zeros(size)
-    X .= get_gamma_prn.(α, β, seed=seed)
-    return X
-end
-
-
-function neg_binomial_rng()
-    throw(error("Not Implemented"))
-end
-
-
-function beta_rng()
-    throw(error("Not Implemented"))
-end
 
 # End of Module
 end

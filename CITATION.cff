@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Santiago"
+  given-names: "Christopher"
+title: "RandomVariates.jl"
+version: 1.0.0
+doi: 10.5281/zenodo.1234
+date-released: 2022-03-29
+url: "https://github.com/chris-santiago/RandomVariates.jl"
