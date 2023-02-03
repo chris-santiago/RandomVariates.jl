@@ -1,9 +1,9 @@
-using Random: bitrand
+using Random: bitrand, MersenneTwister
 
 """
-    tausworthe_rng(size::Int=1; r::Int=3, q::Int=128)
+    tausworthe_rng(shape::Int=1; r::Int=3, q::Int=128)
 
-Generate a `size` element array of random variables from a standard Uniform(0,1) distribution using a Tausworthe RNG.
+Generate a `shape` element array of random variables from a standard Uniform(0,1) distribution using a Tausworthe RNG.
 
 # Notes
 
@@ -31,11 +31,11 @@ Shu Tezuka and Pierre L'Ecuyer. 1991. Efficient and portable combined Tausworthe
 
 Law, A. Simulation modeling and analysis, 5th Ed. McGraw Hill Education, Tuscon, 2013.
 """
-function tausworthe_rng(size::Int=1; r::Int=3, q::Int=128)
+function tausworthe_rng(shape::Int=1; r::Int=3, q::Int=128, seed::Union{Int, Nothing}=nothing)
     n_bits = 32
-    size *= n_bits
-    seed = bitrand(q)
-    B = cat(seed, zeros(Bool, size), dims=1)
+    shape *= n_bits
+    seed = bitrand(MersenneTwister(seed), q)
+    B = cat(seed, zeros(Bool, shape), dims=1)
 
     i = q + 1
     while i < length(B)
@@ -50,7 +50,7 @@ function tausworthe_rng(size::Int=1; r::Int=3, q::Int=128)
 end
 
 
-function tausworthe_rng(size::Tuple{Vararg{Int}}; r::Int=3, q::Int=128)
-    U = tausworthe_rng(reduce(*, size), r=r, q=q)
-    return reshape(U, size)
+function tausworthe_rng(shape::Tuple{Vararg{Int}}; r::Int=3, q::Int=128, seed::Union{Int, Nothing}=nothing)
+    U = tausworthe_rng(reduce(*, shape), r=r, q=q, seed=seed)
+    return reshape(U, shape)
 end

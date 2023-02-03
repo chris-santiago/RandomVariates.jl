@@ -11,3 +11,10 @@ RandomVariates.get_std_normal
 ```@docs
 RandomVariates.normal_rng
 ```
+
+## Multivariate Normal
+
+```@docs
+RandomVariates.get_mv_std_normal
+RandomVariates.mv_normal_rng
+```

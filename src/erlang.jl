@@ -1,7 +1,7 @@
 """
-    erlang_rng(k, λ, size=1; seed=nothing)
+    erlang_rng(k, λ, shape=1; seed=nothing)
 
-Generate a `size` element array of random variables from a Erlang_{`k`}(`λ`) distribution. Optionally you can set a specific seed.
+Generate a `shape` element array of random variables from a Erlang_{`k`}(`λ`) distribution. Optionally you can set a specific seed.
 
 # Notes
 
@@ -29,8 +29,8 @@ D. Goldsman, P. Goldsman. A first course in probability and statistics. 2021.
 
 L. Martino, D. Luengo. Extremely efficient generation of Gamma random variables for α ≥ 1. 2013.
 """
-function erlang_rng(k::Int, λ::Real, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
-    U = get_std_uniform((size..., k), seed=seed)
+function erlang_rng(k::Int, λ::Real, shape::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
+    U = get_std_uniform((shape..., k), seed=seed)
     k_dim = ndims(U)  # k is final dimension
     X = (-1/λ) .* log.(prod(U, dims=k_dim))  # Here (-1/λ) represents mean
     return X

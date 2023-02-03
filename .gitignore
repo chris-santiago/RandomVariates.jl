@@ -4,3 +4,10 @@
 
 # scratch file
 scratch.jl
+rubric.txt
+
+# notebook stuff
+.ipynb_checkpoints/
+node_modules/
+notebooks/*.html
+yarn.lock

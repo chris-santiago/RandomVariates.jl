@@ -10,11 +10,15 @@ expon_rng,
 gamma_rng,
 geometric_rng,
 neg_binomial_rng,
+conv_neg_binomial_rng,
 normal_rng,
+lognormal_rng,
+mv_normal_rng,
 poisson_rng,
 uniform_rng,
 weibull_rng,
-tausworthe_rng
+tausworthe_rng,
+triag_rng
 
 include("uniform.jl")
 include("exponential.jl")
@@ -29,6 +33,7 @@ include("normal.jl")
 include("gamma.jl")
 include("beta.jl")
 include("tausworthe.jl")
+include("triangular.jl")
 
 using Dates
 

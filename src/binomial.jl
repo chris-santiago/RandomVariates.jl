@@ -1,7 +1,7 @@
 """
-    binomial_rng(p, n, size=1; seed=nothing)
+    binomial_rng(p, n, shape=1; seed=nothing)
 
-Generate a `size` element array of random variables from a Binomial(`p`, `n`) distribution. Optionally you can set a specific seed.
+Generate a `shape` element array of random variables from a Binomial(`p`, `n`) distribution. Optionally you can set a specific seed.
 
 # Notes
 
@@ -30,9 +30,9 @@ julia> binomial_rng(.3, 10, (2,2))
 D.P. Kroese, T. Taimre, Z.I. Botev. Handbook of Monte Carlo Methods. 
   Wiley Series in Probability and Statistics, John Wiley & Sons, New York, 2011.
 """
-function binomial_rng(p::Real, n::Int, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
+function binomial_rng(p::Real, n::Int, shape::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
     check_p(p)
-    U = bernoulli_rng(p, (size..., n), seed=seed)
+    U = bernoulli_rng(p, (shape..., n), seed=seed)
     X = sum(U, dims=ndims(U))  # want sum over final or `n` dimension
     return X
 end

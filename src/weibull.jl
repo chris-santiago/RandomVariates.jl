@@ -1,7 +1,7 @@
 """
-    weibull_rng(λ, β, size=1; seed=nothing)
+    weibull_rng(λ, β, shape=1; seed=nothing)
 
-Generate a `size` element array of random variables from a Weibull(`λ`, `β`) distribution. Optionally you can set a specific seed.
+Generate a `shape` element array of random variables from a Weibull(`λ`, `β`) distribution. Optionally you can set a specific seed.
 
 # Notes
 
@@ -34,8 +34,8 @@ C. Alexopoulos, D. Goldsman. Random variate generation. 2020.
 
 Law, A. Simulation modeling and analysis, 5th Ed. McGraw Hill Education, Tuscon, 2013.
 """
-function weibull_rng(λ::Real, β::Real, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
-    U = get_std_uniform(size, seed=seed)
+function weibull_rng(λ::Real, β::Real, shape::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
+    U = get_std_uniform(shape, seed=seed)
     X = (1/λ) .* (-log.(1 .- U)) .^ (1/β)
     return X
 end

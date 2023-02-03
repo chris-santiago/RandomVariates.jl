@@ -12,9 +12,16 @@ Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 DocumenterTools = "35a29f4d-8980-5a13-9543-d66fff28ecb8"
 Fontconfig = "186bb1d3-e1f7-5a2c-a377-96d770f13627"
 Gadfly = "c91e804a-d5a3-530f-b6f0-dfbca275c004"
+HypothesisTests = "09f84164-cd44-5f33-b23f-e6b0d136a0d5"
 
 [compat]
 BenchmarkTools = "1"
+Documenter = "0.27"
+DocumenterTools = "0.1"
+Fontconfig = "0.4"
+Cairo = "1"
+Gadfly = "1"
+Distributions = "0.25"
 julia = "1.6"
 
 [extras]

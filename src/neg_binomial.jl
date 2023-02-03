@@ -1,5 +1,5 @@
 """
-    get_neg_binomial_prn(p, r, size=1; seed=nothing)
+    get_neg_binomial_prn(p, r, shape=1; seed=nothing)
 
 Generate a random variable from a Negative Binomial(`p`, `r`) distribution. Optionally you can set a specific seed.
 
@@ -28,9 +28,9 @@ end
 
 
 """
-    neg_binomial_rng(p, r, size=1; seed=nothing)
+    neg_binomial_rng(p, r, shape=1; seed=nothing)
 
-Generate a `size` element array of random variables from a Negative Binomial(`p`, `r`) distribution. Optionally you can set a specific seed.
+Generate a `shape` element array of random variables from a Negative Binomial(`p`, `r`) distribution. Optionally you can set a specific seed.
 
 # Notes
 
@@ -64,18 +64,18 @@ julia> neg_binomial_rng(.5, 2, (2,2))
 
 Walk, C. Handbook on statistical distributions for experimentalists. 2007.
 """
-function neg_binomial_rng(p::Real, r::Int, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
+function neg_binomial_rng(p::Real, r::Int, shape::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
     check_p(p)
-    X = zeros(size)
+    X = zeros(shape)
     X .= get_neg_binomial_prn.(p, r, seed=seed)
     return X
 end
 
 
 """
-    neg_binomial_rng(p, r, size=1; seed=nothing)
+    conv_neg_binomial_rng(p, r, shape=1; seed=nothing)
 
-Generate a `size` element array of random variables from a Negative Binomial(`p`, `r`) distribution. Optionally you can set a specific seed.
+Generate a `shape` element array of random variables from a Negative Binomial(`p`, `r`) distribution. Optionally you can set a specific seed.
 
 # Notes
 
@@ -111,9 +111,9 @@ julia> conv_neg_binomial_rng(.4, 5, (2,2))
 
 Law, A. Simulation modeling and analysis, 5th Ed. McGraw Hill Education, Tuscon, 2013.
 """
-function conv_neg_binomial_rng(p::Real, r::Int, size::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
+function conv_neg_binomial_rng(p::Real, r::Int, shape::Union{Int, Tuple{Vararg{Int}}}=1; seed::Union{Int, Nothing}=nothing)
     check_p(p)
-    Y = geometric_rng(p, (size..., r), seed=seed)
+    Y = geometric_rng(p, (shape..., r), seed=seed)
     X = sum(Y, dims=ndims(Y))
     return X
 end
