@@ -41,14 +41,17 @@ mv_norm = Dist("Multivariate Normal([0,2], Σ)", mv_normal_rng([0,2], A, Int(N/1
 for d in [uniform, normal, expon, erlang, gamma, triang, weibull, beta]
     out = plot_dist(d)
     out |> SVG("images/$(d.title).svg", 5inch, 5inch)
+    out |> PNG("images/$(d.title).png", 5inch, 5inch)
 end
 
 
 for d in [bernoulli, binomial, geom, neg_binom, poisson]
     out = plot_hist(d)
     out |> SVG("images/$(d.title).svg", 5inch, 5inch)
+    out |> PNG("images/$(d.title).png", 5inch, 5inch)
 end
 
 
 out = plot(x=mv_norm.x[:, 1], y=mv_norm.x[:, 2], Geom.density2d(levels=10), Geom.point, alpha=[0.4], Guide.title(mv_norm.title))
 out |> SVG("images/$(mv_norm.title).svg", 5inch, 5inch)
+out |> PNG("images/$(mv_norm.title).png", 5inch, 5inch)
